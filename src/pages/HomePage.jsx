@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
+
 const HomePage = () => {
   return (
-    <h1 className='text-3xl p-2 font-bold underline text-primary'>
-      Hello world!
-    </h1>
+    <button
+      type='button'
+      className='text-3xl p-2 font-bold underline text-primary'
+    >
+      <Link to='/login'>Login</Link>
+    </button>
   );
 };
 
