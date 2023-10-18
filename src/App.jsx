@@ -1,8 +1,16 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from '@/pages/HomePage.jsx';
+import Login from '@/pages/login';
+import Signup from '@/pages/signup';
+import ForgetPassword from '@/pages/forget-password';
 
 const App = () => {
-  const routes = [{ path: '/', component: <HomePage />, show: true }];
+  const routes = [
+    { path: '/', component: <HomePage />, show: true },
+    { path: '/login', component: <Login />, show: true },
+    { path: '/signup', component: <Signup />, show: true },
+    { path: '/forget-password', component: <ForgetPassword />, show: true },
+  ];
 
   return (
     <BrowserRouter>
