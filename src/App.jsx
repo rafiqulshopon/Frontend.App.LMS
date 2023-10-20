@@ -3,6 +3,7 @@ import HomePage from '@/pages/HomePage.jsx';
 import Login from '@/pages/login';
 import Signup from '@/pages/signup';
 import ForgetPassword from '@/pages/forget-password';
+import VerifyOTP from './pages/signup/VerifyOTP';
 
 const App = () => {
   const routes = [
@@ -10,6 +11,7 @@ const App = () => {
     { path: '/login', component: <Login />, show: true },
     { path: '/signup', component: <Signup />, show: true },
     { path: '/forget-password', component: <ForgetPassword />, show: true },
+    { path: '/verify-otp', component: <VerifyOTP />, show: true },
   ];
 
   return (
