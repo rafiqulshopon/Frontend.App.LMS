@@ -4,6 +4,7 @@ import Login from '@/pages/login';
 import Signup from '@/pages/signup';
 import ForgetPassword from '@/pages/forget-password';
 import VerifyOTP from './pages/signup/VerifyOTP';
+import Layout from './components/Layout';
 
 const App = () => {
   const routes = [
@@ -16,14 +17,20 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {routes.map(
-          (route, index) =>
-            route.show && (
-              <Route key={index} path={route.path} element={route.component} />
-            )
-        )}
-      </Routes>
+      <Layout>
+        <Routes>
+          {routes.map(
+            (route, index) =>
+              route.show && (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={route.component}
+                />
+              )
+          )}
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 };
