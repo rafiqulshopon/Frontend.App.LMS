@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 const Layout = ({ children }) => {
   const location = useLocation();
   const hideSidebarOnRoutes = [
+    '/404',
     '/',
     '/login',
     '/signup',
