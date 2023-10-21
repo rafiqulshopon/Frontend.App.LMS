@@ -1,10 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from '@/pages/HomePage.jsx';
 import Login from '@/pages/login';
 import Signup from '@/pages/signup';
 import ForgetPassword from '@/pages/forget-password';
 import VerifyOTP from './pages/signup/VerifyOTP';
 import Layout from './components/Layout';
+import NotFoundPage from './components/NotFoundPage';
 
 const App = () => {
   const routes = [
@@ -29,6 +30,8 @@ const App = () => {
                 />
               )
           )}
+          <Route path='/404' element={<NotFoundPage />} />
+          <Route path='*' element={<Navigate to='/404' replace />} />
         </Routes>
       </Layout>
     </BrowserRouter>
