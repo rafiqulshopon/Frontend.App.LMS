@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../../axios';
+import instance from '../../axios';
 import Cookies from 'js-cookie';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -16,7 +16,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const { data } = await axios.post('/auth/login', {
+      const { data } = await instance.post('/auth/login', {
         email: email,
         password: password,
       });
