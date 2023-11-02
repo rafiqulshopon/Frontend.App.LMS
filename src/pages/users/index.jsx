@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Spin, Table } from 'antd';
+import { Link } from 'react-router-dom';
 import axiosInstance from '../../axios';
 
 const Users = () => {
@@ -60,6 +61,20 @@ const Users = () => {
       dataIndex: 'department',
       key: 'department',
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record) => (
+        <Link
+          to={{
+            pathname: `/user/${record._id}`,
+            state: { user: record._id },
+          }}
+        >
+          Show User Info
+        </Link>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -75,6 +90,8 @@ const Users = () => {
 
     fetchUsers();
   }, []);
+
+  console.log({ users });
 
   return (
     <div className='mt-4 mr-4'>

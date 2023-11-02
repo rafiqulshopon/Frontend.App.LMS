@@ -15,6 +15,7 @@ import BorrowReturn from './pages/borrow-return';
 import Settings from './pages/settings';
 import Cookies from 'js-cookie';
 import { AuthContext } from './context/AuthContext';
+import SingleUser from './pages/users/SingleUser';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
@@ -31,6 +32,7 @@ const App = () => {
     { path: '/reservations', component: <Reservations />, show: isLoggedIn },
     { path: '/borrow-return', component: <BorrowReturn />, show: isLoggedIn },
     { path: '/settings', component: <Settings />, show: isLoggedIn },
+    { path: '/user/:id', component: <SingleUser />, show: isLoggedIn },
   ];
 
   return (
