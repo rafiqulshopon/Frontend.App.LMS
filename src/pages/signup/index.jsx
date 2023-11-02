@@ -7,23 +7,24 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  console.log({ signupData });
-
-  const handleSignup = async (e) => {
-    console.log('clicked');
-    e.preventDefault();
+  const handleSignup = async (values) => {
     setError(null);
 
-    if (signupData?.password !== signupData?.confirmPassword) {
+    const data = {
+      ...values,
+      name: { first: values.firstName, last: values.lastName },
+    };
+
+    if (data.password !== data.confirmPassword) {
       setError("Passwords don't match!");
       return;
     }
 
-    if (signupData?.confirmPassword) delete signupData?.confirmPassword;
+    if (data.confirmPassword) delete data.confirmPassword;
 
     try {
-      const response = await axios.post('/auth/signup', { ...signupData });
-      localStorage.setItem('email', signupData?.email);
+      const response = await axios.post('/auth/signup', data);
+      localStorage.setItem('email', data.email);
       navigate('/verify-otp');
       console.log({ response });
     } catch (err) {
