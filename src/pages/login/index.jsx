@@ -1,18 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../axios';
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Row,
-  Col,
-  Card,
-  Typography,
-} from 'antd';
-
-const { Title } = Typography;
+import { Form, Input, Button, Checkbox } from 'antd';
 
 const Login = () => {
   const [error, setError] = useState(null);
@@ -39,71 +28,60 @@ const Login = () => {
   };
 
   return (
-    <Row
-      align='middle'
-      justify='center'
-      style={{ backgroundColor: '#E5F7FF', height: '100vh' }}
-    >
-      <Col>
-        <Card style={{ width: 350 }}>
-          <Title level={3}>Sign in to your account</Title>
-          <Form layout='vertical' onFinish={handleLogin}>
-            {error && (
-              <div
-                className='ant-alert ant-alert-error'
-                style={{ marginBottom: '16px' }}
-              >
-                {error}
-              </div>
-            )}
+    <div className='bg-blue-100 h-screen flex items-center justify-center'>
+      <div className='bg-white p-10 rounded-lg shadow-md w-96'>
+        <p className='text-center text-xl font-medium mb-6'>
+          Sign in to your account
+        </p>
 
-            <Form.Item
-              label='Your email'
-              name='email'
-              rules={[{ required: true, message: 'Please input your email!' }]}
+        <Form layout='vertical' onFinish={handleLogin}>
+          {error && <div className='text-red-500 mb-4'>{error}</div>}
+
+          <Form.Item
+            label={<span className='font-semibold'>Your email</span>}
+            name='email'
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input placeholder='Enter your email' />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className='font-semibold'>Password</span>}
+            name='password'
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password placeholder='••••••••' />
+          </Form.Item>
+
+          <Form.Item className='mb-6'>
+            <Form.Item name='remember' valuePropName='checked' noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+            <Link to='/forget-password' className='float-right'>
+              Forgot password?
+            </Link>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type='primary'
+              htmlType='submit'
+              block
+              className='bg-blue-600 hover:bg-blue-700'
             >
-              <Input placeholder='Enter your email' />
-            </Form.Item>
+              Sign in
+            </Button>
+          </Form.Item>
 
-            <Form.Item
-              label='Password'
-              name='password'
-              rules={[
-                { required: true, message: 'Please input your password!' },
-              ]}
-            >
-              <Input.Password placeholder='••••••••' />
-            </Form.Item>
-
-            <Form.Item style={{ marginBottom: '24px' }}>
-              <Form.Item name='remember' valuePropName='checked' noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              <Link to='/forget-password' className='ant-btn ant-btn-link'>
-                Forgot password?
-              </Link>
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type='primary'
-                htmlType='submit'
-                style={{ width: '100%', backgroundColor: '#1890FF' }}
-              >
-                Sign in
-              </Button>
-            </Form.Item>
-
-            <div style={{ textAlign: 'center' }}>
-              Don’t have an account yet?{' '}
-              <Link to='/signup' className='ant-btn ant-btn-link'>
-                Sign up
-              </Link>
-            </div>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
+          <p className='text-center'>
+            Don’t have an account yet?{' '}
+            <Link to='/signup' className='text-blue-600'>
+              Sign up
+            </Link>
+          </p>
+        </Form>
+      </div>
+    </div>
   );
 };
 
