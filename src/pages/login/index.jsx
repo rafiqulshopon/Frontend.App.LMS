@@ -16,15 +16,18 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post('/auth/login', {
+      const { data } = await axios.post('/auth/login', {
         email: email,
         password: password,
       });
 
-      const token = response.data.token;
-      Cookies.set('accessToken', token, { expires: 7 });
-      setIsLoggedIn(true);
-      navigate('/dashboard');
+      if (data.token) {
+        Cookies.set('accessToken', data.token, { expires: 7 });
+        setIsLoggedIn(true);
+        if (Cookies.get('accessToken')) {
+          navigate('/dashboard');
+        }
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || 'An error occurred during login.'
