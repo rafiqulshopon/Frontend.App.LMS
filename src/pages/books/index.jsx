@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Spin, Table } from 'antd';
 import axiosInstance from '../../axios';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     {
@@ -53,6 +54,7 @@ const Books = () => {
       try {
         const response = await axiosInstance.get('/books');
         setBooks(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching books:', error);
       }
@@ -63,7 +65,20 @@ const Books = () => {
 
   return (
     <div className='mt-4 mr-4'>
-      <Table dataSource={books} columns={columns} rowKey='_id' />
+      {loading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <Spin size='large' />
+        </div>
+      ) : (
+        <Table dataSource={books} columns={columns} rowKey='_id' />
+      )}
     </div>
   );
 };
