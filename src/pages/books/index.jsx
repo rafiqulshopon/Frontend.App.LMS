@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import instance from '../../axios';
+import axiosInstance from '../../axios';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -51,7 +51,7 @@ const Books = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await instance.get('/books');
+        const response = await axiosInstance.get('/books');
         setBooks(response.data);
       } catch (error) {
         console.error('Error fetching books:', error);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const instance = axios.create({
+const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 5000,
   headers: {
@@ -9,7 +9,7 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('accessToken');
 
@@ -24,4 +24,4 @@ instance.interceptors.request.use(
   }
 );
 
-export default instance;
+export default axiosInstance;
