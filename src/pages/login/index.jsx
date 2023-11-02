@@ -1,21 +1,30 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../axios';
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Row,
+  Col,
+  Card,
+  Typography,
+} from 'antd';
+
+const { Title } = Typography;
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (values) => {
     setError(null);
 
     try {
       const response = await axios.post('/auth/login', {
-        email: email,
-        password: password,
+        email: values.email,
+        password: values.password,
       });
 
       const token = response.data.token;
@@ -30,98 +39,71 @@ const Login = () => {
   };
 
   return (
-    <section className='bg-cyan-50	'>
-      <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
-        <div className='w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0'>
-          <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
-            <h1 className='text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl'>
-              Sign in to your account
-            </h1>
-            <form
-              className='space-y-4 md:space-y-6'
-              action='#'
-              onSubmit={handleLogin}
-            >
-              {error && <div className='text-red-500'>{error}</div>}
+    <Row
+      align='middle'
+      justify='center'
+      style={{ backgroundColor: '#E5F7FF', height: '100vh' }}
+    >
+      <Col>
+        <Card style={{ width: 350 }}>
+          <Title level={3}>Sign in to your account</Title>
+          <Form layout='vertical' onFinish={handleLogin}>
+            {error && (
+              <div
+                className='ant-alert ant-alert-error'
+                style={{ marginBottom: '16px' }}
+              >
+                {error}
+              </div>
+            )}
 
-              <div>
-                <label
-                  htmlFor='email'
-                  className='block mb-2 text-sm font-medium text-gray-900'
-                >
-                  Your email
-                </label>
-                <input
-                  type='email'
-                  name='email'
-                  id='email'
-                  onChange={(e) => setEmail(e.target.value)}
-                  className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-                  placeholder='Enter your email'
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor='password'
-                  className='block mb-2 text-sm font-medium text-gray-900'
-                >
-                  Password
-                </label>
-                <input
-                  type='password'
-                  name='password'
-                  id='password'
-                  placeholder='••••••••'
-                  onChange={(e) => setPassword(e.target.value)}
-                  className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-                  required
-                />
-              </div>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-start'>
-                  <div className='flex items-center h-5'>
-                    <input
-                      id='remember'
-                      aria-describedby='remember'
-                      type='checkbox'
-                      className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300'
-                      required
-                    />
-                  </div>
-                  <div className='ml-3 text-sm'>
-                    <label htmlFor='remember' className='text-gray-500'>
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <Link
-                  to='/forget-password'
-                  className='text-sm font-medium text-primary-600 hover:underline'
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <button
-                type='submit'
-                className='w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'
+            <Form.Item
+              label='Your email'
+              name='email'
+              rules={[{ required: true, message: 'Please input your email!' }]}
+            >
+              <Input placeholder='Enter your email' />
+            </Form.Item>
+
+            <Form.Item
+              label='Password'
+              name='password'
+              rules={[
+                { required: true, message: 'Please input your password!' },
+              ]}
+            >
+              <Input.Password placeholder='••••••••' />
+            </Form.Item>
+
+            <Form.Item style={{ marginBottom: '24px' }}>
+              <Form.Item name='remember' valuePropName='checked' noStyle>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+              <Link to='/forget-password' className='ant-btn ant-btn-link'>
+                Forgot password?
+              </Link>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type='primary'
+                htmlType='submit'
+                style={{ width: '100%', backgroundColor: '#1890FF' }}
               >
                 Sign in
-              </button>
-              <p className='text-sm font-light text-gray-500'>
-                Don’t have an account yet?{' '}
-                <Link
-                  to='/signup'
-                  className='font-medium text-primary-600 hover:underline'
-                >
-                  Sign up
-                </Link>
-              </p>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
+              </Button>
+            </Form.Item>
+
+            <div style={{ textAlign: 'center' }}>
+              Don’t have an account yet?{' '}
+              <Link to='/signup' className='ant-btn ant-btn-link'>
+                Sign up
+              </Link>
+            </div>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
