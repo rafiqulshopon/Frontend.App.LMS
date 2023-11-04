@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from '../../axios';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../axios';
 
 const VerifyOTP = () => {
   const [otpData, setOtpData] = useState({
@@ -7,6 +8,7 @@ const VerifyOTP = () => {
     otp: '',
   });
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const emailFromLocalStorage = localStorage.getItem('email');
@@ -20,8 +22,9 @@ const VerifyOTP = () => {
     setError(null);
 
     try {
-      const response = await axios.post('/auth/verify-otp', otpData);
+      const response = await axiosInstance.post('/auth/verify-otp', otpData);
       console.log(response);
+      navigate('/dashboard');
     } catch (err) {
       setError(
         err.response?.data?.message ||
