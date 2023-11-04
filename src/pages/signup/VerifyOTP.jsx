@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import Cookies from 'js-cookie';
+import { AuthContext } from '../../context/AuthContext';
 
 const VerifyOTP = () => {
   const [otpData, setOtpData] = useState({
@@ -9,6 +11,7 @@ const VerifyOTP = () => {
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     const emailFromLocalStorage = localStorage.getItem('email');
@@ -22,9 +25,14 @@ const VerifyOTP = () => {
     setError(null);
 
     try {
-      const response = await axiosInstance.post('/auth/verify-otp', otpData);
-      console.log(response);
-      navigate('/dashboard');
+      const { data } = await axiosInstance.post('/auth/verify-otp', otpData);
+      if (data.token) {
+        Cookies.set('accessToken', data.token, { expires: 7 });
+        setIsLoggedIn(true);
+        if (Cookies.get('accessToken')) {
+          navigate('/dashboard');
+        }
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
