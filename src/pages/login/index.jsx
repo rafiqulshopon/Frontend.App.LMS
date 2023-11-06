@@ -1,27 +1,33 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../../axios';
+import axiosInstance from '../../axios';
+import Cookies from 'js-cookie';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const response = await axios.post('/auth/login', {
+      const { data } = await axiosInstance.post('/auth/login', {
         email: email,
         password: password,
       });
 
-      const token = response.data.token;
-
-      localStorage.setItem('accessToken', token);
-      navigate('/');
+      if (data.token) {
+        Cookies.set('accessToken', data.token, { expires: 7 });
+        setIsLoggedIn(true);
+        if (Cookies.get('accessToken')) {
+          navigate('/dashboard');
+        }
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || 'An error occurred during login.'

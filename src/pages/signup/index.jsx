@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../../axios';
+import axiosInstance from '../../axios';
 
 const Signup = () => {
   const [signupData, setSignupData] = useState({});
@@ -22,7 +22,9 @@ const Signup = () => {
     if (signupData?.confirmPassword) delete signupData?.confirmPassword;
 
     try {
-      const response = await axios.post('/auth/signup', { ...signupData });
+      const response = await axiosInstance.post('/auth/signup', {
+        ...signupData,
+      });
       localStorage.setItem('email', signupData?.email);
       navigate('/verify-otp');
       console.log({ response });

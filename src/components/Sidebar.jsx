@@ -18,7 +18,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='h-full w-64 p-6 bg-gray-800 text-white'>
+    <div className='h-full w-64 p-6 bg-gray-800 mr-6 text-white'>
       <div className='text-xl mb-6'>LMS</div>
       <ul>
         {items.map((item) => (
