@@ -130,18 +130,22 @@ const Books = () => {
     fetchBooks();
   }, []);
 
+  const tableStyle = {
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    borderRadius: '0.5rem',
+  };
+
   return (
-    <div className='mt-4 mr-4 ml-4'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between mb-4'>
         <Input
           placeholder='Search books'
-          className='w-1/4'
+          className='w-full md:w-1/4'
           prefix={<SearchOutlined />}
         />
-
         <Button
           type='primary'
-          className='bg-blue-500 hover:bg-blue-700'
+          className='ml-4 bg-blue-500 hover:bg-blue-700 text-white'
           onClick={showModal}
         >
           Add Book
@@ -154,18 +158,17 @@ const Books = () => {
         fetchBooks={fetchBooks}
       />
       {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
+        <div className='flex justify-center items-center h-full'>
           <Spin size='large' />
         </div>
       ) : (
-        <Table dataSource={books} columns={columns} rowKey='_id' />
+        <Table
+          dataSource={books}
+          columns={columns}
+          rowKey='_id'
+          style={tableStyle}
+          className='rounded-lg overflow-hidden'
+        />
       )}
     </div>
   );
