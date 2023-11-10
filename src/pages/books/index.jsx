@@ -157,19 +157,13 @@ const Books = () => {
         handleCancel={handleCancel}
         fetchBooks={fetchBooks}
       />
-      {loading ? (
-        <div className='flex justify-center items-center h-full'>
-          <Spin size='large' />
-        </div>
-      ) : (
-        <Table
-          dataSource={books}
-          columns={columns}
-          rowKey='_id'
-          style={tableStyle}
-          className='rounded-lg overflow-hidden'
-        />
-      )}
+      <Table
+        dataSource={books}
+        columns={columns}
+        rowKey='_id'
+        loading={loading}
+        className='rounded-lg overflow-hidden'
+      />
     </div>
   );
 };
