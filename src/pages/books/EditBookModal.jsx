@@ -70,32 +70,30 @@ const EditBookModal = ({
       title='Edit Book'
       open={isModalVisible}
       onCancel={handleCancel}
-      style={{ top: 20 }}
       width={650}
       footer={null}
     >
       <Form form={form} layout='vertical' onFinish={onFinish}>
-        <Form.Item
-          name='title'
-          label='Title'
-          rules={[{ required: true, message: 'Please input the title!' }]}
-        >
-          <Input placeholder='Enter book title' />
-        </Form.Item>
-        <Form.Item
-          name='author'
-          label='Author'
-          rules={[{ required: true, message: 'Please input the author!' }]}
-        >
-          <Input placeholder='Enter author name' />
-        </Form.Item>
-        <Form.Item
-          name='category'
-          label='Category'
-          rules={[{ required: true, message: 'Please input the category!' }]}
-        >
-          <Input placeholder='Enter book category' />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='title'
+              label='Title'
+              rules={[{ required: true, message: 'Please input the title!' }]}
+            >
+              <Input placeholder='Enter book title' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='author'
+              label='Author'
+              rules={[{ required: true, message: 'Please input the author!' }]}
+            >
+              <Input placeholder='Enter author name' />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Row gutter={16}>
           <Col span={12}>
@@ -130,16 +128,31 @@ const EditBookModal = ({
           </Col>
         </Row>
 
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='category'
+              label='Category'
+              rules={[
+                { required: true, message: 'Please input the category!' },
+              ]}
+            >
+              <Input placeholder='Enter book category' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='isbn'
+              label='ISBN'
+              rules={[{ required: true, message: 'Please input the ISBN!' }]}
+            >
+              <Input placeholder='Enter book ISBN' />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item name='description' label='Description'>
           <TextArea placeholder='Enter book description' />
-        </Form.Item>
-
-        <Form.Item
-          name='isbn'
-          label='ISBN'
-          rules={[{ required: true, message: 'Please input the ISBN!' }]}
-        >
-          <Input placeholder='Enter book ISBN' />
         </Form.Item>
 
         <Row gutter={16}>
