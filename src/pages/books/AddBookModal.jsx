@@ -49,7 +49,7 @@ const AddBookModal = ({
       title='Add New Book'
       open={isModalVisible}
       onCancel={handleCancel}
-      width={750}
+      width={650}
       footer={null}
     >
       <Form
