@@ -8,6 +8,8 @@ import {
   InputNumber,
   Button,
   message,
+  Row,
+  Col,
 } from 'antd';
 import axiosInstance from '../../axios';
 
@@ -47,8 +49,7 @@ const AddBookModal = ({
       title='Add New Book'
       open={isModalVisible}
       onCancel={handleCancel}
-      width={600}
-      style={{ top: 20 }}
+      width={750}
       footer={null}
     >
       <Form
@@ -59,71 +60,96 @@ const AddBookModal = ({
           department: 'CSE',
         }}
       >
-        <Form.Item
-          name='title'
-          label='Title'
-          rules={[{ required: true, message: 'Please input the title!' }]}
-        >
-          <Input placeholder='Enter book title' />
-        </Form.Item>
-        <Form.Item
-          name='author'
-          label='Author'
-          rules={[{ required: true, message: 'Please input the author!' }]}
-        >
-          <Input placeholder='Enter author name' />
-        </Form.Item>
-        <Form.Item
-          name='category'
-          label='Category'
-          rules={[{ required: true, message: 'Please select a category!' }]}
-        >
-          <Input placeholder='Enter book category' />
-        </Form.Item>
-        <Form.Item
-          name='department'
-          label='Department'
-          rules={[{ required: true, message: 'Please select a department!' }]}
-        >
-          <Select placeholder='Select department'>
-            <Option value='CSE'>CSE</Option>
-            <Option value='LHR'>LHR</Option>
-            <Option value='PHR'>PHR</Option>
-            <Option value='ENG'>ENG</Option>
-          </Select>
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='title'
+              label='Title'
+              rules={[{ required: true, message: 'Please input the title!' }]}
+            >
+              <Input placeholder='Enter book title' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='author'
+              label='Author'
+              rules={[{ required: true, message: 'Please input the author!' }]}
+            >
+              <Input placeholder='Enter author name' />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='department'
+              label='Department'
+              rules={[
+                { required: true, message: 'Please select a department!' },
+              ]}
+            >
+              <Select placeholder='Select department'>
+                <Option value='CSE'>CSE</Option>
+                <Option value='LHR'>LHR</Option>
+                <Option value='PHR'>PHR</Option>
+                <Option value='ENG'>ENG</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='publishedDate'
+              label='Published Date'
+              rules={[
+                { required: true, message: 'Please select a published date!' },
+              ]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='category'
+              label='Category'
+              rules={[{ required: true, message: 'Please select a category!' }]}
+            >
+              <Input placeholder='Enter book category' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='totalQuantity'
+              label='Total Quantity'
+              rules={[
+                { required: true, message: 'Please input the total quantity!' },
+              ]}
+            >
+              <InputNumber min={1} style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='isbn'
+              label='ISBN'
+              rules={[{ required: true, message: 'Please input the ISBN!' }]}
+            >
+              <Input placeholder='Enter book ISBN' />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item name='description' label='Description'>
           <TextArea placeholder='Enter book description' />
         </Form.Item>
-        <Form.Item
-          name='publishedDate'
-          label='Published Date'
-          rules={[
-            { required: true, message: 'Please select a published date!' },
-          ]}
-        >
-          <DatePicker style={{ width: '100%' }} />
-        </Form.Item>
-        <Form.Item
-          name='isbn'
-          label='ISBN'
-          rules={[{ required: true, message: 'Please input the ISBN!' }]}
-        >
-          <Input placeholder='Enter book ISBN' />
-        </Form.Item>
-        <Form.Item
-          name='totalQuantity'
-          label='Total Quantity'
-          rules={[
-            { required: true, message: 'Please input the total quantity!' },
-          ]}
-        >
-          <InputNumber
-            min={1}
-            style={{ width: '100%' }}
-            placeholder='Enter total quantity'
-          />
-        </Form.Item>
+
         <Form.Item>
           <div style={{ textAlign: 'right' }}>
             <Button
