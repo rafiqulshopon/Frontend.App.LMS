@@ -71,7 +71,7 @@ const EditBookModal = ({
       open={isModalVisible}
       onCancel={handleCancel}
       style={{ top: 20 }}
-      width={750}
+      width={650}
       footer={null}
     >
       <Form form={form} layout='vertical' onFinish={onFinish}>
