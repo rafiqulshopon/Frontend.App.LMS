@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Input, Modal } from 'antd';
+import { Spin, Table, Input, Modal, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { SearchOutlined } from '@ant-design/icons';
@@ -113,12 +113,13 @@ const Users = () => {
           className='w-1/4'
           prefix={<SearchOutlined />}
         />
-        <button
+        <Button
+          type='primary'
+          className='bg-blue-500 hover:bg-blue-700'
           onClick={showModal}
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
         >
           Add User
-        </button>
+        </Button>
       </div>
       <Modal
         title='Add New User'
