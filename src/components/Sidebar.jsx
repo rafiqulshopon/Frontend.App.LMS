@@ -38,6 +38,20 @@ const Sidebar = () => {
         overflow: 'auto',
       }}
     >
+      <div
+        className='logo'
+        style={{
+          padding: '1rem',
+          backgroundColor: 'white',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          src='https://www.activeliving.ie/content/uploads/2020/04/placeholder-logo-2.png'
+          alt='LMS Logo'
+          style={{ maxHeight: '50px' }}
+        />
+      </div>
       <Menu
         mode='inline'
         defaultSelectedKeys={[location.pathname]}

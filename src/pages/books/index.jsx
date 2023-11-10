@@ -1,13 +1,32 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Input, Button } from 'antd';
+import { Spin, Table, Input, Button, Dropdown, Menu, Space } from 'antd';
 import axiosInstance from '../../axios';
-import { SearchOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const actionMenu = (record) => [
+    {
+      label: 'View details',
+      key: 'view',
+      onClick: () => console.log(record),
+    },
+    {
+      label: 'Edit',
+      key: 'edit',
+
+      onClick: () => console.log(record),
+    },
+    {
+      label: 'Delete',
+      key: 'delete',
+      onClick: () => console.log(record),
+    },
+  ];
 
   // Handlers for modal
   const showModal = () => {
@@ -62,6 +81,24 @@ const Books = () => {
       title: 'Current Quantity',
       dataIndex: 'currentQuantity',
       key: 'currentQuantity',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: actionMenu(record),
+          }}
+          trigger={['click']}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              <EllipsisOutlined />
+            </Space>
+          </a>
+        </Dropdown>
+      ),
     },
   ];
 
