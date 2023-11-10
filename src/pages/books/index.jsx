@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Input, Button, Dropdown, Menu, Space } from 'antd';
+import { Spin, Table, Input, Button, Dropdown, message, Space } from 'antd';
 import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
@@ -8,6 +8,43 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // Handlers for modal
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const fetchBooks = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/books');
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteBook = async (bookId) => {
+    try {
+      await axiosInstance.delete(`/book/${bookId}`);
+      message.success('Book deleted successfully');
+      fetchBooks();
+    } catch (error) {
+      message.error('Failed to delete book');
+      console.error('Error deleting the book:', error);
+    }
+  };
 
   const actionMenu = (record) => [
     {
@@ -24,22 +61,9 @@ const Books = () => {
     {
       label: 'Delete',
       key: 'delete',
-      onClick: () => console.log(record),
+      onClick: () => handleDeleteBook(record?._id),
     },
   ];
-
-  // Handlers for modal
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
 
   const columns = [
     {
@@ -101,16 +125,6 @@ const Books = () => {
       ),
     },
   ];
-
-  const fetchBooks = async () => {
-    try {
-      const response = await axiosInstance.get('/books');
-      setBooks(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching books:', error);
-    }
-  };
 
   useEffect(() => {
     fetchBooks();
