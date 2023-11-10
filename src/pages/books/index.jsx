@@ -1,18 +1,29 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Input, Button, Dropdown, message, Space } from 'antd';
+import { Table, Input, Button, Dropdown, message, Space } from 'antd';
 import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
+import EditBookModal from './EditBookModal';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState({
+    edit: false,
+    add: false,
+  });
+  const [editBookId, setEditBookId] = useState(null);
 
   // Handlers for modal
-  const showModal = () => {
-    setIsModalVisible(true);
+  const showModal = (context, bookId) => {
+    setIsModalVisible((prevState) => ({
+      ...prevState,
+      [context]: true,
+    }));
+    setEditBookId(bookId);
   };
+
+  console.log({ isModalVisible });
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -54,8 +65,7 @@ const Books = () => {
     {
       label: 'Edit',
       key: 'edit',
-
-      onClick: () => console.log(record),
+      onClick: () => showModal('edit', record._id),
     },
     {
       label: 'Delete',
@@ -129,11 +139,6 @@ const Books = () => {
     fetchBooks();
   }, []);
 
-  const tableStyle = {
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    borderRadius: '0.5rem',
-  };
-
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between mb-4'>
@@ -145,17 +150,26 @@ const Books = () => {
         <Button
           type='primary'
           className='ml-4 bg-blue-500 hover:bg-blue-700 text-white'
-          onClick={showModal}
+          onClick={() => showModal('add')}
         >
           Add Book
         </Button>
       </div>
       <AddBookModal
-        isModalVisible={isModalVisible}
+        isModalVisible={isModalVisible?.add}
         handleOk={handleOk}
         handleCancel={handleCancel}
         fetchBooks={fetchBooks}
       />
+
+      <EditBookModal
+        isModalVisible={isModalVisible?.edit}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        fetchBooks={fetchBooks}
+        bookId={editBookId}
+      />
+
       <Table
         dataSource={books}
         columns={columns}
