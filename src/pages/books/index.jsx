@@ -23,7 +23,6 @@ const Books = () => {
   };
 
   const fetchBooks = async () => {
-    setLoading(true);
     try {
       const response = await axiosInstance.get('/books');
       setBooks(response.data);
