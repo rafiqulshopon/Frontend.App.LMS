@@ -48,6 +48,7 @@ const AddBookModal = ({
       open={isModalVisible}
       onCancel={handleCancel}
       width={600}
+      style={{ top: 20 }}
       footer={null}
     >
       <Form
@@ -124,17 +125,23 @@ const AddBookModal = ({
           />
         </Form.Item>
         <Form.Item>
-          <Button key='back' onClick={handleCancel} style={{ marginRight: 8 }}>
-            Cancel
-          </Button>
-          <Button
-            key='submit'
-            type='primary'
-            className='bg-blue-500 hover:bg-blue-700'
-            htmlType='submit'
-          >
-            Add Book
-          </Button>
+          <div style={{ textAlign: 'right' }}>
+            <Button
+              key='back'
+              onClick={handleCancel}
+              style={{ marginRight: 8 }}
+            >
+              Cancel
+            </Button>
+            <Button
+              key='submit'
+              type='primary'
+              className='bg-blue-500 hover:bg-blue-700'
+              htmlType='submit'
+            >
+              Add Book
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </Modal>
