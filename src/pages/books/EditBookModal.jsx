@@ -8,6 +8,8 @@ import {
   InputNumber,
   Button,
   message,
+  Row,
+  Col,
 } from 'antd';
 import axiosInstance from '../../axios';
 import moment from 'moment';
@@ -69,6 +71,7 @@ const EditBookModal = ({
       open={isModalVisible}
       onCancel={handleCancel}
       style={{ top: 20 }}
+      width={750}
       footer={null}
     >
       <Form form={form} layout='vertical' onFinish={onFinish}>
@@ -93,30 +96,44 @@ const EditBookModal = ({
         >
           <Input placeholder='Enter book category' />
         </Form.Item>
-        <Form.Item
-          name='department'
-          label='Department'
-          rules={[{ required: true, message: 'Please select the department!' }]}
-        >
-          <Select placeholder='Select department'>
-            <Option value='CSE'>CSE</Option>
-            <Option value='LHR'>LHR</Option>
-            <Option value='PHR'>PHR</Option>
-            <Option value='ENG'>ENG</Option>
-          </Select>
-        </Form.Item>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='department'
+              label='Department'
+              rules={[
+                { required: true, message: 'Please select the department!' },
+              ]}
+            >
+              <Select placeholder='Select department'>
+                <Option value='CSE'>CSE</Option>
+                <Option value='LHR'>LHR</Option>
+                <Option value='PHR'>PHR</Option>
+                <Option value='ENG'>ENG</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='publishedDate'
+              label='Published Date'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select the published date!',
+                },
+              ]}
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item name='description' label='Description'>
           <TextArea placeholder='Enter book description' />
         </Form.Item>
-        <Form.Item
-          name='publishedDate'
-          label='Published Date'
-          rules={[
-            { required: true, message: 'Please select the published date!' },
-          ]}
-        >
-          <DatePicker style={{ width: '100%' }} />
-        </Form.Item>
+
         <Form.Item
           name='isbn'
           label='ISBN'
@@ -124,24 +141,35 @@ const EditBookModal = ({
         >
           <Input placeholder='Enter book ISBN' />
         </Form.Item>
-        <Form.Item
-          name='totalQuantity'
-          label='Total Quantity'
-          rules={[
-            { required: true, message: 'Please input the total quantity!' },
-          ]}
-        >
-          <InputNumber min={1} style={{ width: '100%' }} />
-        </Form.Item>
-        <Form.Item
-          name='currentQuantity'
-          label='Current Quantity'
-          rules={[
-            { required: true, message: 'Please input the current quantity!' },
-          ]}
-        >
-          <InputNumber min={0} style={{ width: '100%' }} />
-        </Form.Item>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='totalQuantity'
+              label='Total Quantity'
+              rules={[
+                { required: true, message: 'Please input the total quantity!' },
+              ]}
+            >
+              <InputNumber min={1} style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='currentQuantity'
+              label='Current Quantity'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input the current quantity!',
+                },
+              ]}
+            >
+              <InputNumber min={0} style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item>
           <div style={{ textAlign: 'right' }}>
             <Button key='back' onClick={handleCancel}>
