@@ -30,6 +30,7 @@ const EditBookModal = ({
   const [loading, setLoading] = useState(true);
 
   const fetchBookDetails = async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get(`/book/${bookId}`);
       const bookDetails = response.data;
