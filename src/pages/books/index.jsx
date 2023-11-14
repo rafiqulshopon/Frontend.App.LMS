@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Table, Input, Button, Dropdown, message, Space } from 'antd';
 import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
@@ -13,6 +14,7 @@ const Books = () => {
     add: false,
   });
   const [editBookId, setEditBookId] = useState(null);
+  const navigate = useNavigate();
 
   // Handlers for modal
   const showModal = (context, bookId) => {
@@ -60,7 +62,7 @@ const Books = () => {
     {
       label: 'View details',
       key: 'view',
-      onClick: () => console.log(record),
+      onClick: () => navigate(`/book/${record._id}`),
     },
     {
       label: 'Edit',
