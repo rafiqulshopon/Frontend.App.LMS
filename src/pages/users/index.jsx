@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Input, Modal, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Spin, Table, Input, Dropdown, Modal, Button, Space } from 'antd';
 import axiosInstance from '../../axios';
-import { SearchOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -20,6 +21,45 @@ const Users = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosInstance.get('/users');
+      setUsers(response.data.users);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const toggleUserStatus = async (userId, isActive) => {
+    const endpoint = isActive ? `/deactivate/${userId}` : `/activate/${userId}`;
+    try {
+      const response = await axiosInstance.put(endpoint);
+      message.success(response.data.message);
+      fetchUsers();
+    } catch (error) {
+      message.error('Failed to update user status');
+      console.error('Error updating user status:', error);
+    }
+  };
+
+  const actionMenu = (record) => [
+    {
+      label: 'View details',
+      key: 'view',
+      onClick: () => navigate(`/user/${record._id}`),
+    },
+    {
+      label: 'Edit',
+      key: 'edit',
+    },
+    {
+      label: record.isActive ? 'Deactivate' : 'Activate',
+      key: 'toggleActive',
+      onClick: () => toggleUserStatus(record._id, record.isActive),
+    },
+  ];
 
   const columns = [
     {
@@ -75,33 +115,28 @@ const Users = () => {
       dataIndex: 'department',
       key: 'department',
     },
+
     {
-      title: 'Action',
-      key: 'action',
-      render: (record) => (
-        <Link
-          to={{
-            pathname: `/user/${record._id}`,
-            state: { user: record._id },
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: actionMenu(record),
           }}
+          trigger={['click']}
         >
-          Show User Info
-        </Link>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              <EllipsisOutlined />
+            </Space>
+          </a>
+        </Dropdown>
       ),
     },
   ];
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axiosInstance.get('/users');
-        setUsers(response.data.users);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-
     fetchUsers();
   }, []);
 
@@ -123,7 +158,7 @@ const Users = () => {
       </div>
       <Modal
         title='Add New User'
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
