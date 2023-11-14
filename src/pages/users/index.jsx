@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spin, Table, Input, Dropdown, Modal, Button, Space } from 'antd';
+import { Table, Input, Dropdown, Modal, Button, Space, Tag } from 'antd';
 import axiosInstance from '../../axios';
-import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  EllipsisOutlined,
+  SearchOutlined,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+} from '@ant-design/icons';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -65,60 +70,73 @@ const Users = () => {
     {
       title: 'First Name',
       dataIndex: ['name', 'first'],
+      align: 'center',
     },
     {
       title: 'Last Name',
       dataIndex: ['name', 'last'],
       key: 'lastName',
+      align: 'center',
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      align: 'center',
     },
     {
       title: 'Date of Birth',
       dataIndex: 'dateOfBirth',
       key: 'dateOfBirth',
-      render: (dateOfBirth) =>
-        new Date(dateOfBirth).toISOString().split('T')[0],
+      align: 'center',
+      render: (dateOfBirth) => new Date(dateOfBirth).toLocaleDateString(), // more readable date
     },
-
     {
       title: 'Phone Number',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      align: 'center',
     },
     {
       title: 'Role',
       dataIndex: 'role',
       key: 'role',
+      align: 'center',
     },
     {
-      title: 'Is Verified',
+      title: 'Verification Status',
       dataIndex: 'isVerified',
       key: 'isVerified',
-      render: (isVerified) => (isVerified ? 'Yes' : 'No'),
+      align: 'center',
+      render: (isVerified) =>
+        isVerified ? (
+          <Tag color='blue'>Verified</Tag>
+        ) : (
+          <Tag color='volcano'>Not Verified</Tag>
+        ),
     },
     {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
+      align: 'center',
     },
     {
       title: 'Batch',
       dataIndex: 'batch',
       key: 'batch',
+      align: 'center',
     },
     {
       title: 'Department',
       dataIndex: 'department',
       key: 'department',
+      align: 'center',
     },
-
     {
       title: 'Actions',
       key: 'actions',
+      align: 'center',
       render: (_, record) => (
         <Dropdown
           menu={{
@@ -141,20 +159,13 @@ const Users = () => {
   }, []);
 
   return (
-    <div className='mt-4 mr-4 ml-4'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between mb-4'>
         <Input
           placeholder='Search users'
-          className='w-1/4'
+          className='w-full md:w-1/4'
           prefix={<SearchOutlined />}
         />
-        <Button
-          type='primary'
-          className='bg-blue-500 hover:bg-blue-700'
-          onClick={showModal}
-        >
-          Add User
-        </Button>
       </div>
       <Modal
         title='Add New User'
@@ -181,20 +192,13 @@ const Users = () => {
         <p>Some contents...</p>
       </Modal>
 
-      {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <Spin size='large' />
-        </div>
-      ) : (
-        <Table dataSource={users} columns={columns} rowKey='_id' />
-      )}
+      <Table
+        dataSource={users}
+        columns={columns}
+        rowKey='_id'
+        loading={loading}
+        className='rounded-lg overflow-hidden'
+      />
     </div>
   );
 };
