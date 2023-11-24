@@ -49,6 +49,16 @@ const EditBookModal = ({
     }
   }, [bookId]);
 
+  const validateCurrentQuantity = (_, value) => {
+    const totalQuantity = form.getFieldValue('totalQuantity');
+    if (value > totalQuantity) {
+      return Promise.reject(
+        new Error('Current quantity cannot be greater than total quantity')
+      );
+    }
+    return Promise.resolve();
+  };
+
   const onFinish = async (values) => {
     const formattedValues = {
       ...values,
@@ -169,6 +179,9 @@ const EditBookModal = ({
                   {
                     required: true,
                     message: 'Please input the current quantity!',
+                  },
+                  {
+                    validator: validateCurrentQuantity,
                   },
                 ]}
               >
