@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, Input, Dropdown, Modal, Button, Space, Tag } from 'antd';
+import { Table, Input, Dropdown, Modal, Space, Tag, message } from 'antd';
 import axiosInstance from '../../axios';
-import {
-  EllipsisOutlined,
-  SearchOutlined,
-  CheckCircleTwoTone,
-  CloseCircleTwoTone,
-} from '@ant-design/icons';
+import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -41,8 +36,8 @@ const Users = () => {
     const endpoint = isActive ? `/deactivate/${userId}` : `/activate/${userId}`;
     try {
       const response = await axiosInstance.put(endpoint);
-      message.success(response.data.message);
       fetchUsers();
+      message.success(response.data.message);
     } catch (error) {
       message.error('Failed to update user status');
       console.error('Error updating user status:', error);
