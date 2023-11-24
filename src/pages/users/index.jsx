@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Table, Input, Dropdown, Modal, Space, Tag, message } from 'antd';
 import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
+import useDebounce from '../../helpers/hooks/useDebounce';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const navigate = useNavigate();
 
   const showModal = () => {
@@ -25,6 +27,19 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       const response = await axiosInstance.get('/users');
+      setUsers(response.data.users);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const searchUsers = async (search_keyword = '') => {
+    let queryData = {};
+    if (search_keyword) queryData.search_keyword = search_keyword;
+
+    try {
+      const response = await axiosInstance.post('/search-users', queryData);
       setUsers(response.data.users);
       setLoading(false);
     } catch (error) {
@@ -158,6 +173,16 @@ const Users = () => {
     },
   ];
 
+  const updateQueryData = useDebounce((value) => {
+    setLoading(true);
+    searchUsers(value);
+  }, 500);
+
+  const handleSearchChange = (event) => {
+    setSearchKeyword(event.target.value);
+    updateQueryData(event.target.value);
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -167,8 +192,10 @@ const Users = () => {
       <div className='flex justify-between mb-4'>
         <Input
           placeholder='Search users'
-          className='w-full md:w-1/4'
+          className='w-1/4'
           prefix={<SearchOutlined />}
+          value={searchKeyword}
+          onChange={handleSearchChange}
         />
       </div>
       <Modal
