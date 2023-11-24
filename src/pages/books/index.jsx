@@ -182,31 +182,32 @@ const Books = () => {
 
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
-      <div className='flex justify-between mb-4'>
-        <Input
-          placeholder='Search books'
-          className='w-full md:w-1/4'
-          prefix={<SearchOutlined />}
-          value={searchKeyword}
-          onChange={handleSearchChange}
-        />
+      <div className='flex justify-between items-center mb-4'>
+        <div className='flex gap-4 flex-grow'>
+          <Input
+            placeholder='Search books'
+            className='w-1/4'
+            prefix={<SearchOutlined />}
+            value={searchKeyword}
+            onChange={handleSearchChange}
+          />
 
-        <AppFilterRadio
-          options={departmentOptions}
-          onChange={handleSelectionChange}
-          btn_text='Department'
-          // isActive={!!organizationsQueryData?.status}
-          // defaultValue={organizationsQueryData?.status}
-        />
+          <AppFilterRadio
+            options={departmentOptions}
+            onChange={handleSelectionChange}
+            btn_text='Department'
+          />
+        </div>
 
         <Button
           type='primary'
-          className='ml-4 bg-blue-500 hover:bg-blue-700 text-white'
+          className='bg-blue-500 hover:bg-blue-700 text-white'
           onClick={() => showModal('add')}
         >
           Add Book
         </Button>
       </div>
+
       <AddBookModal
         isModalVisible={isModalVisible?.add}
         handleOk={handleOk}
