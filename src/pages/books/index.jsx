@@ -6,6 +6,7 @@ import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
 import useDebounce from '../../helpers/hooks/useDebounce';
+import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -47,9 +48,13 @@ const Books = () => {
     }
   };
 
-  const searchBooks = async (title = '') => {
+  const searchBooks = async (title = '', department = '') => {
+    let queryData = {};
+    if (title) queryData.title = title;
+    if (department) queryData.department = department;
+
     try {
-      const response = await axiosInstance.post('/books', { title });
+      const response = await axiosInstance.post('/books', queryData);
       setBooks(response.data);
     } catch (error) {
       message.error('Error fetching books');
@@ -163,6 +168,18 @@ const Books = () => {
     fetchBooks();
   }, []);
 
+  const departmentOptions = [
+    { label: 'CSE', value: 'CSE' },
+    { label: 'LHR', value: 'LHR' },
+    { label: 'PHR', value: 'PHR' },
+    { label: 'ENG', value: 'ENG' },
+  ];
+
+  const handleSelectionChange = (value) => {
+    setLoading(true);
+    searchBooks('', value);
+  };
+
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between mb-4'>
@@ -173,6 +190,15 @@ const Books = () => {
           value={searchKeyword}
           onChange={handleSearchChange}
         />
+
+        <AppFilterRadio
+          options={departmentOptions}
+          onChange={handleSelectionChange}
+          btn_text='Department'
+          // isActive={!!organizationsQueryData?.status}
+          // defaultValue={organizationsQueryData?.status}
+        />
+
         <Button
           type='primary'
           className='ml-4 bg-blue-500 hover:bg-blue-700 text-white'
