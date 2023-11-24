@@ -5,10 +5,13 @@ import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
+import useDebounce from '../../helpers/hooks/useDebounce';
+import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalVisible, setIsModalVisible] = useState({
     edit: false,
     add: false,
@@ -24,8 +27,6 @@ const Books = () => {
     }));
     setEditBookId(bookId);
   };
-
-  console.log({ isModalVisible });
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -45,6 +46,32 @@ const Books = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const searchBooks = async (title = '', department = '') => {
+    let queryData = {};
+    if (title) queryData.title = title;
+    if (department) queryData.department = department;
+
+    try {
+      const response = await axiosInstance.post('/books', queryData);
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQueryData = useDebounce((value) => {
+    setLoading(true);
+    searchBooks(value);
+  }, 500);
+
+  const handleSearchChange = (event) => {
+    setSearchKeyword(event.target.value);
+    updateQueryData(event.target.value);
   };
 
   const handleDeleteBook = async (bookId) => {
@@ -141,22 +168,46 @@ const Books = () => {
     fetchBooks();
   }, []);
 
+  const departmentOptions = [
+    { label: 'CSE', value: 'CSE' },
+    { label: 'LHR', value: 'LHR' },
+    { label: 'PHR', value: 'PHR' },
+    { label: 'ENG', value: 'ENG' },
+  ];
+
+  const handleSelectionChange = (value) => {
+    setLoading(true);
+    searchBooks('', value);
+  };
+
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
-      <div className='flex justify-between mb-4'>
-        <Input
-          placeholder='Search books'
-          className='w-full md:w-1/4'
-          prefix={<SearchOutlined />}
-        />
+      <div className='flex justify-between items-center mb-4'>
+        <div className='flex gap-4 flex-grow'>
+          <Input
+            placeholder='Search books'
+            className='w-1/4'
+            prefix={<SearchOutlined />}
+            value={searchKeyword}
+            onChange={handleSearchChange}
+          />
+
+          <AppFilterRadio
+            options={departmentOptions}
+            onChange={handleSelectionChange}
+            btn_text='Department'
+          />
+        </div>
+
         <Button
           type='primary'
-          className='ml-4 bg-blue-500 hover:bg-blue-700 text-white'
+          className='bg-blue-500 hover:bg-blue-700 text-white'
           onClick={() => showModal('add')}
         >
           Add Book
         </Button>
       </div>
+
       <AddBookModal
         isModalVisible={isModalVisible?.add}
         handleOk={handleOk}
