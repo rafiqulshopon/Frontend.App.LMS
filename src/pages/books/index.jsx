@@ -54,7 +54,7 @@ const Books = () => {
     if (department) queryData.department = department;
 
     try {
-      const response = await axiosInstance.post('/books', queryData);
+      const response = await axiosInstance.post('/search-books', queryData);
       setBooks(response.data);
     } catch (error) {
       message.error('Error fetching books');
