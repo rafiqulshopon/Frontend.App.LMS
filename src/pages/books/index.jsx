@@ -5,10 +5,12 @@ import axiosInstance from '../../axios';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
+import useDebounce from '../../helpers/hooks/useDebounce';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalVisible, setIsModalVisible] = useState({
     edit: false,
     add: false,
@@ -24,8 +26,6 @@ const Books = () => {
     }));
     setEditBookId(bookId);
   };
-
-  console.log({ isModalVisible });
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -45,6 +45,28 @@ const Books = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const searchBooks = async (title = '') => {
+    try {
+      const response = await axiosInstance.post('/books', { title });
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQueryData = useDebounce((value) => {
+    setLoading(true);
+    searchBooks(value);
+  }, 500);
+
+  const handleSearchChange = (event) => {
+    setSearchKeyword(event.target.value);
+    updateQueryData(event.target.value);
   };
 
   const handleDeleteBook = async (bookId) => {
@@ -148,6 +170,8 @@ const Books = () => {
           placeholder='Search books'
           className='w-full md:w-1/4'
           prefix={<SearchOutlined />}
+          value={searchKeyword}
+          onChange={handleSearchChange}
         />
         <Button
           type='primary'
