@@ -63,15 +63,11 @@ const Users = () => {
 
   const columns = [
     {
-      title: 'First Name',
-      dataIndex: ['name', 'first'],
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       align: 'center',
-    },
-    {
-      title: 'Last Name',
-      dataIndex: ['name', 'last'],
-      key: 'lastName',
-      align: 'center',
+      render: (_, user) => `${user?.name?.first} ${user?.name?.last}`,
     },
     {
       title: 'Email',
@@ -84,7 +80,7 @@ const Users = () => {
       dataIndex: 'dateOfBirth',
       key: 'dateOfBirth',
       align: 'center',
-      render: (dateOfBirth) => new Date(dateOfBirth).toLocaleDateString(), // more readable date
+      render: (dateOfBirth) => new Date(dateOfBirth).toLocaleDateString(),
     },
     {
       title: 'Phone Number',
@@ -97,6 +93,7 @@ const Users = () => {
       dataIndex: 'role',
       key: 'role',
       align: 'center',
+      render: (role) => role.charAt(0).toUpperCase() + role.slice(1),
     },
     {
       title: 'Verification Status',
@@ -108,6 +105,18 @@ const Users = () => {
           <Tag color='blue'>Verified</Tag>
         ) : (
           <Tag color='volcano'>Not Verified</Tag>
+        ),
+    },
+    {
+      title: 'Account Status',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      align: 'center',
+      render: (isActive) =>
+        isActive ? (
+          <Tag color='success'>Active</Tag>
+        ) : (
+          <Tag color='error'>Inactive</Tag>
         ),
     },
     {
@@ -132,10 +141,10 @@ const Users = () => {
       title: 'Actions',
       key: 'actions',
       align: 'center',
-      render: (_, record) => (
+      render: (_, user) => (
         <Dropdown
           menu={{
-            items: actionMenu(record),
+            items: actionMenu(user),
           }}
           trigger={['click']}
         >
