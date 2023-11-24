@@ -197,6 +197,7 @@ const Users = () => {
         columns={columns}
         rowKey='_id'
         loading={loading}
+        pagination={false}
         className='rounded-lg overflow-hidden'
       />
     </div>
