@@ -4,7 +4,6 @@ import {
   Form,
   Input,
   Select,
-  DatePicker,
   InputNumber,
   Button,
   message,
@@ -13,7 +12,6 @@ import {
   Spin,
 } from 'antd';
 import axiosInstance from '../../axios';
-import moment from 'moment';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -36,7 +34,6 @@ const EditBookModal = ({
       const bookDetails = response.data;
       form.setFieldsValue({
         ...bookDetails,
-        publishedDate: moment(bookDetails.publishedDate),
       });
       setLoading(false);
     } catch (error) {
@@ -55,7 +52,6 @@ const EditBookModal = ({
   const onFinish = async (values) => {
     const formattedValues = {
       ...values,
-      publishedDate: values.publishedDate.format('YYYY-MM-DD'),
       totalQuantity: Number(values.totalQuantity),
       currentQuantity: Number(values.currentQuantity),
     };
@@ -119,20 +115,6 @@ const EditBookModal = ({
                   <Option value='PHR'>PHR</Option>
                   <Option value='ENG'>ENG</Option>
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name='publishedDate'
-                label='Published Date'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select the published date!',
-                  },
-                ]}
-              >
-                <DatePicker style={{ width: '100%' }} />
               </Form.Item>
             </Col>
           </Row>
