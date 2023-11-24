@@ -66,10 +66,6 @@ const Users = () => {
       onClick: () => navigate(`/user/${record._id}`),
     },
     {
-      label: 'Edit',
-      key: 'edit',
-    },
-    {
       label: record.isActive ? 'Deactivate' : 'Activate',
       key: 'toggleActive',
       onClick: () => toggleUserStatus(record._id, record.isActive),
