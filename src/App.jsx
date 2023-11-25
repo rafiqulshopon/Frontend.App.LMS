@@ -17,6 +17,7 @@ import Cookies from 'js-cookie';
 import { AuthContext } from './context/AuthContext';
 import SingleUser from './pages/users/SingleUser';
 import BookDetails from './pages/books/BookDetails';
+import Profile from './pages/profile';
 import AuthWrapper from './AuthWrapper';
 
 const App = () => {
@@ -99,6 +100,15 @@ const App = () => {
         </AuthWrapper>
       ),
       show: true,
+    },
+    {
+      path: '/profile',
+      component: (
+        <AuthWrapper>
+          <Profile />
+        </AuthWrapper>
+      ),
+      show: isLoggedIn,
     },
   ];
 

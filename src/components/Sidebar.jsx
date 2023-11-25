@@ -6,6 +6,7 @@ import {
   BookOutlined,
   StarOutlined,
   SyncOutlined,
+  TeamOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
 
@@ -16,7 +17,7 @@ const Sidebar = () => {
 
   const items = [
     { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
-    { path: '/users', label: 'Users', icon: <UserOutlined /> },
+    { path: '/users', label: 'Users', icon: <TeamOutlined /> },
     { path: '/books', label: 'Books', icon: <BookOutlined /> },
     { path: '/reservations', label: 'Reservations', icon: <StarOutlined /> },
     {
@@ -25,6 +26,7 @@ const Sidebar = () => {
       icon: <SyncOutlined />,
     },
     { path: '/settings', label: 'Settings', icon: <SettingOutlined /> },
+    { path: '/profile', label: 'My profile', icon: <UserOutlined /> },
   ];
 
   return (
