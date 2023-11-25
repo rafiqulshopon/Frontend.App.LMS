@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
   HomeOutlined,
@@ -7,13 +7,20 @@ import {
   StarOutlined,
   SyncOutlined,
   TeamOutlined,
-  // SettingOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
+import Cookies from 'js-cookie';
 
 const { Sider } = Layout;
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove('accessToken');
+    navigate('/login');
+  };
 
   const items = [
     { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
@@ -25,8 +32,8 @@ const Sidebar = () => {
       label: 'Borrow & Return',
       icon: <SyncOutlined />,
     },
-    // { path: '/settings', label: 'Settings', icon: <SettingOutlined /> },
     { path: '/profile', label: 'My profile', icon: <UserOutlined /> },
+    { label: 'Logout', icon: <LogoutOutlined />, onClick: handleLogout },
   ];
 
   return (
@@ -59,9 +66,14 @@ const Sidebar = () => {
         defaultSelectedKeys={[location.pathname]}
         style={{ height: '100%', borderRight: 0 }}
         items={items.map((item) => ({
-          key: item.path,
+          key: item.path || item.label,
           icon: item.icon,
-          label: <Link to={item.path}>{item.label}</Link>,
+          label: item.path ? (
+            <Link to={item.path}>{item.label}</Link>
+          ) : (
+            item.label
+          ),
+          onClick: item.onClick,
         }))}
       />
     </Sider>
