@@ -7,7 +7,7 @@ import {
   StarOutlined,
   SyncOutlined,
   TeamOutlined,
-  SettingOutlined,
+  // SettingOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -25,7 +25,7 @@ const Sidebar = () => {
       label: 'Borrow & Return',
       icon: <SyncOutlined />,
     },
-    { path: '/settings', label: 'Settings', icon: <SettingOutlined /> },
+    // { path: '/settings', label: 'Settings', icon: <SettingOutlined /> },
     { path: '/profile', label: 'My profile', icon: <UserOutlined /> },
   ];
 
