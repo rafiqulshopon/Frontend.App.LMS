@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
 const AuthWrapper = ({ children }) => {
-  console.log(window.location.href);
   const token = Cookies.get('accessToken');
 
   if (!token) {
