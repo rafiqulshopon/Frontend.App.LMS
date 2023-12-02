@@ -107,14 +107,17 @@ const BorrowReturn = () => {
       title: 'Borrow Date',
       dataIndex: 'borrowDate',
       key: 'borrowDate',
-      render: (borrowDate) => new Date(borrowDate).toLocaleDateString(),
+      render: (borrowDate) =>
+        borrowDate ? new Date(borrowDate).toLocaleDateString() : '-',
     },
     {
       title: 'Expected Return Date',
       dataIndex: 'expectedReturnDate',
       key: 'expectedReturnDate',
       render: (expectedReturnDate) =>
-        new Date(expectedReturnDate).toLocaleDateString(),
+        expectedReturnDate
+          ? new Date(expectedReturnDate).toLocaleDateString()
+          : '-',
     },
 
     {
@@ -122,7 +125,9 @@ const BorrowReturn = () => {
       dataIndex: 'actualReturnDate',
       key: 'actualReturnDate',
       render: (actualReturnDate) =>
-        new Date(actualReturnDate).toLocaleDateString(),
+        actualReturnDate
+          ? new Date(actualReturnDate).toLocaleDateString()
+          : '-',
     },
 
     {
