@@ -78,13 +78,18 @@ const BorrowReturn = () => {
     setIsReturnModalVisible(false);
   };
 
-  const actionMenu = (record) => [
-    {
-      label: 'Return Book',
-      key: 'return',
-      onClick: () => showReturnModal(record._id),
-    },
-  ];
+  const actionMenu = (record) => {
+    if (record.status !== 'returned') {
+      return [
+        {
+          label: 'Return Book',
+          key: 'return',
+          onClick: () => showReturnModal(record._id),
+        },
+      ];
+    }
+    return [];
+  };
 
   const columns = [
     {
@@ -111,6 +116,15 @@ const BorrowReturn = () => {
       render: (expectedReturnDate) =>
         new Date(expectedReturnDate).toLocaleDateString(),
     },
+
+    {
+      title: 'Actual Return Date',
+      dataIndex: 'actualReturnDate',
+      key: 'actualReturnDate',
+      render: (actualReturnDate) =>
+        new Date(actualReturnDate).toLocaleDateString(),
+    },
+
     {
       title: 'Status',
       dataIndex: 'status',
