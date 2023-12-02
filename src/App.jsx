@@ -19,12 +19,12 @@ import SingleUser from './pages/users/SingleUser';
 import BookDetails from './pages/books/BookDetails';
 import Profile from './pages/profile';
 import AuthWrapper from './AuthWrapper';
+import RootRedirect from './RootRedirect';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
 
   const routes = [
-    { path: '/', component: <HomePage />, show: true },
     { path: '/login', component: <Login />, show: true },
     { path: '/signup', component: <Signup />, show: true },
     { path: '/forget-password', component: <ForgetPassword />, show: true },
@@ -127,6 +127,7 @@ const App = () => {
                   />
                 )
             )}
+            <Route path='/' element={<RootRedirect />} />
             <Route path='/404' element={<NotFoundPage />} />
             <Route path='*' element={<Navigate to='/404' replace />} />
           </Routes>
