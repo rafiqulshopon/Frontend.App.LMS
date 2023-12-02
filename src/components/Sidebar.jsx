@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Modal } from 'antd';
 import {
   HomeOutlined,
   UserOutlined,
@@ -22,6 +22,25 @@ const Sidebar = () => {
     navigate('/login');
   };
 
+  const showConfirmLogout = () => {
+    Modal.confirm({
+      title: 'Do you want to logout?',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#1890ff',
+          borderColor: '#1890ff',
+          color: 'white',
+        },
+      },
+      onOk() {
+        handleLogout();
+      },
+      onCancel() {
+        console.log('Cancel logout');
+      },
+    });
+  };
+
   const items = [
     { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
     { path: '/users', label: 'Users', icon: <TeamOutlined /> },
@@ -33,7 +52,7 @@ const Sidebar = () => {
       icon: <SyncOutlined />,
     },
     { path: '/profile', label: 'My profile', icon: <UserOutlined /> },
-    { label: 'Logout', icon: <LogoutOutlined />, onClick: handleLogout },
+    { label: 'Logout', icon: <LogoutOutlined />, onClick: showConfirmLogout },
   ];
 
   return (
