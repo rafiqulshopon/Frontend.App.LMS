@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Table, message, Space, Input, Button } from 'antd';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
-import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
 
 const BorrowReturn = () => {
@@ -82,17 +81,6 @@ const BorrowReturn = () => {
     setIsAssignModalVisible(false);
   };
 
-  const departmentOptions = [
-    { label: 'CSE', value: 'CSE' },
-    { label: 'LHR', value: 'LHR' },
-    { label: 'PHR', value: 'PHR' },
-    { label: 'ENG', value: 'ENG' },
-  ];
-
-  const handleSelectionChange = (value) => {
-    // setLoading(true);
-  };
-
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
@@ -103,12 +91,6 @@ const BorrowReturn = () => {
             prefix={<SearchOutlined />}
             // value={searchKeyword}
             // onChange={handleSearchChange}
-          />
-
-          <AppFilterRadio
-            options={departmentOptions}
-            onChange={handleSelectionChange}
-            btn_text='Department'
           />
         </div>
 
