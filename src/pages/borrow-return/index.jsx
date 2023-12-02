@@ -3,10 +3,12 @@ import { Table, message, Space, Input, Button } from 'antd';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
+import AssignBookModal from './AssignBookModal';
 
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
 
   const fetchBorrowingHistories = async () => {
     try {
@@ -67,6 +69,19 @@ const BorrowReturn = () => {
     },
   ];
 
+  const showAssignModal = () => {
+    setIsAssignModalVisible(true);
+  };
+
+  const handleAssignOk = () => {
+    setIsAssignModalVisible(false);
+    fetchBorrowingHistories();
+  };
+
+  const handleAssignCancel = () => {
+    setIsAssignModalVisible(false);
+  };
+
   const departmentOptions = [
     { label: 'CSE', value: 'CSE' },
     { label: 'LHR', value: 'LHR' },
@@ -100,10 +115,19 @@ const BorrowReturn = () => {
         <Button
           type='primary'
           className='bg-blue-500 hover:bg-blue-700 text-white'
+          onClick={showAssignModal}
         >
           Assign Book
         </Button>
       </div>
+
+      <AssignBookModal
+        isModalVisible={isAssignModalVisible}
+        handleOk={handleAssignOk}
+        handleCancel={handleAssignCancel}
+        refreshBorrowingHistories={fetchBorrowingHistories}
+      />
+
       <Table
         dataSource={borrowingHistories}
         columns={columns}
