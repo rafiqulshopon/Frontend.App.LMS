@@ -47,6 +47,9 @@ const AssignBookModal = ({
       message.success('Book assigned successfully!');
       handleOk();
       refreshBorrowingHistories();
+      form.resetFields();
+      setBooks([]);
+      setUsers([]);
     } catch (error) {
       message.error('Failed to assign book');
     }
