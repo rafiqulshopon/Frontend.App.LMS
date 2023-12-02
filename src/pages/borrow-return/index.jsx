@@ -8,6 +8,7 @@ import AssignBookModal from './AssignBookModal';
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
   const [users, setUsers] = useState([]);
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [queryData, setQueryData] = useState({ status: 'borrowed' });
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
@@ -33,8 +34,19 @@ const BorrowReturn = () => {
     }
   };
 
+  const fetchBooks = async () => {
+    try {
+      const response = await axiosInstance.get('/books');
+      console.log({ response });
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchBooks();
   }, []);
 
   useEffect(() => {
@@ -119,16 +131,18 @@ const BorrowReturn = () => {
     }));
   };
 
+  const handleBookChange = (bookId) => {
+    setLoading(true);
+    setQueryData((prevState) => ({
+      ...prevState,
+      bookId,
+    }));
+  };
+
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
-          <AppFilterRadio
-            options={statusOptions}
-            onChange={handleSelectionChange}
-            btn_text='Status'
-          />
-
           <Select
             placeholder='Select User'
             onChange={handleUserChange}
@@ -142,6 +156,26 @@ const BorrowReturn = () => {
               </Option>
             ))}
           </Select>
+
+          <Select
+            placeholder='Select Book'
+            onChange={handleBookChange}
+            style={{ width: 200 }}
+            allowClear
+            onClear={() => fetchBorrowingHistories()}
+          >
+            {books.map((book) => (
+              <Option key={book._id} value={book._id}>
+                {book.title}
+              </Option>
+            ))}
+          </Select>
+
+          <AppFilterRadio
+            options={statusOptions}
+            onChange={handleSelectionChange}
+            btn_text='Status'
+          />
         </div>
 
         <Button
