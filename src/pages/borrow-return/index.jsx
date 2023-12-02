@@ -107,7 +107,7 @@ const BorrowReturn = () => {
     setLoading(true);
     setQueryData((prevState) => ({
       ...prevState,
-      status: status || prevState.status,
+      status: status || 'borrowed',
     }));
   };
 
