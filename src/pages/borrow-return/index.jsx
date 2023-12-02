@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, message, Space, Select, Button } from 'antd';
+import { Table, message, Space, Select, Button, Tag } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
@@ -53,6 +53,12 @@ const BorrowReturn = () => {
     fetchBorrowingHistories();
   }, [queryData]);
 
+  const statusColors = {
+    borrowed: 'orange',
+    returned: 'green',
+    overdue: 'red',
+  };
+
   const columns = [
     {
       title: 'Book Title',
@@ -82,6 +88,12 @@ const BorrowReturn = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status) => {
+        const color = statusColors[status] || 'default';
+        return (
+          <Tag color={color}>{status[0].toUpperCase() + status.slice(1)}</Tag>
+        );
+      },
     },
     {
       title: 'Actions',
