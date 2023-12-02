@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, message, Space, Select, Button, Tag } from 'antd';
+import { Table, message, Space, Select, Button, Tag, Dropdown } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
+import ReturnBookModal from './ReturnBookModal';
 
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
@@ -12,6 +13,10 @@ const BorrowReturn = () => {
   const [loading, setLoading] = useState(true);
   const [queryData, setQueryData] = useState({ status: 'borrowed' });
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
+
+  const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
+  const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
+    useState(null);
 
   const fetchBorrowingHistories = async () => {
     try {
@@ -59,6 +64,28 @@ const BorrowReturn = () => {
     overdue: 'red',
   };
 
+  const showReturnModal = (borrowingHistoryId) => {
+    setSelectedBorrowingHistoryId(borrowingHistoryId);
+    setIsReturnModalVisible(true);
+  };
+
+  const handleReturnOk = () => {
+    setIsReturnModalVisible(false);
+    fetchBorrowingHistories();
+  };
+
+  const handleReturnCancel = () => {
+    setIsReturnModalVisible(false);
+  };
+
+  const actionMenu = (record) => [
+    {
+      label: 'Return Book',
+      key: 'return',
+      onClick: () => showReturnModal(record._id),
+    },
+  ];
+
   const columns = [
     {
       title: 'Book Title',
@@ -98,12 +125,19 @@ const BorrowReturn = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: () => (
-        <Space>
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: actionMenu(record),
+          }}
+          trigger={['click']}
+        >
           <a onClick={(e) => e.preventDefault()}>
-            <EllipsisOutlined />
+            <Space>
+              <EllipsisOutlined />
+            </Space>
           </a>
-        </Space>
+        </Dropdown>
       ),
     },
   ];
@@ -204,6 +238,13 @@ const BorrowReturn = () => {
         handleOk={handleAssignOk}
         handleCancel={handleAssignCancel}
         refreshBorrowingHistories={fetchBorrowingHistories}
+      />
+
+      <ReturnBookModal
+        isModalVisible={isReturnModalVisible}
+        handleOk={handleReturnOk}
+        handleCancel={handleReturnCancel}
+        borrowingHistoryId={selectedBorrowingHistoryId}
       />
 
       <Table
