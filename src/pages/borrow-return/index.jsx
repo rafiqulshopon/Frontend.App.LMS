@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Table, message, Space, Input, Button } from 'antd';
-import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, message, Space, Select, Button } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
 
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [queryData, setQueryData] = useState({ status: 'borrowed' });
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
 
   const fetchBorrowingHistories = async () => {
     try {
-      const response = await axiosInstance.post('/borrow-list');
+      const response = await axiosInstance.post('/borrow-list', queryData);
       setBorrowingHistories(response.data.borrowingHistories || []);
     } catch (error) {
       message.error('Error fetching borrowing histories');
@@ -22,9 +24,22 @@ const BorrowReturn = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosInstance.get('/users');
+      setUsers(response.data.users);
+    } catch (error) {
+      message.error('Error fetching users');
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   useEffect(() => {
     fetchBorrowingHistories();
-  }, []);
+  }, [queryData]);
 
   const columns = [
     {
@@ -88,8 +103,20 @@ const BorrowReturn = () => {
     { label: 'Overdue', value: 'overdue' },
   ];
 
-  const handleSelectionChange = (value) => {
+  const handleSelectionChange = (status) => {
     setLoading(true);
+    setQueryData((prevState) => ({
+      ...prevState,
+      status: status || prevState.status,
+    }));
+  };
+
+  const handleUserChange = (userId) => {
+    setLoading(true);
+    setQueryData((prevState) => ({
+      ...prevState,
+      userId,
+    }));
   };
 
   return (
@@ -101,6 +128,20 @@ const BorrowReturn = () => {
             onChange={handleSelectionChange}
             btn_text='Status'
           />
+
+          <Select
+            placeholder='Select User'
+            onChange={handleUserChange}
+            style={{ width: 200 }}
+            allowClear
+            onClear={() => fetchBorrowingHistories()}
+          >
+            {users.map((user) => (
+              <Option key={user._id} value={user._id}>
+                {user.name.first} {user.name.last}
+              </Option>
+            ))}
+          </Select>
         </div>
 
         <Button
