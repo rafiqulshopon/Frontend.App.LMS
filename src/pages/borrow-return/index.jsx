@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, message, Space, Input, Button } from 'antd';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import axiosInstance from '../../axios';
+import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
 
 const BorrowReturn = () => {
@@ -81,16 +82,24 @@ const BorrowReturn = () => {
     setIsAssignModalVisible(false);
   };
 
+  const statusOptions = [
+    { label: 'Borrowed', value: 'borrowed' },
+    { label: 'Returned', value: 'returned' },
+    { label: 'Overdue', value: 'overdue' },
+  ];
+
+  const handleSelectionChange = (value) => {
+    setLoading(true);
+  };
+
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
-          <Input
-            placeholder='Search books'
-            className='w-1/4'
-            prefix={<SearchOutlined />}
-            // value={searchKeyword}
-            // onChange={handleSearchChange}
+          <AppFilterRadio
+            options={statusOptions}
+            onChange={handleSelectionChange}
+            btn_text='Status'
           />
         </div>
 
