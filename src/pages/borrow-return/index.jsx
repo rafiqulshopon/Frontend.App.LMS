@@ -11,7 +11,7 @@ const BorrowReturn = () => {
   const [users, setUsers] = useState([]);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [queryData, setQueryData] = useState({ status: 'borrowed' });
+  const [queryData, setQueryData] = useState({});
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
 
   const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
@@ -179,7 +179,7 @@ const BorrowReturn = () => {
     setLoading(true);
     setQueryData((prevState) => ({
       ...prevState,
-      status: status || 'borrowed',
+      status,
     }));
   };
 
