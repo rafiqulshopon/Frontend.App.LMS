@@ -4,7 +4,6 @@ import {
   HomeOutlined,
   UserOutlined,
   BookOutlined,
-  StarOutlined,
   SyncOutlined,
   TeamOutlined,
   LogoutOutlined,
@@ -45,7 +44,6 @@ const Sidebar = () => {
     { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
     { path: '/users', label: 'Users', icon: <TeamOutlined /> },
     { path: '/books', label: 'Books', icon: <BookOutlined /> },
-    { path: '/reservations', label: 'Reservations', icon: <StarOutlined /> },
     {
       path: '/borrow-return',
       label: 'Borrow & Return',
