@@ -10,7 +10,6 @@ import NotFoundPage from './components/NotFoundPage';
 import Dashboard from './pages/dashboard';
 import Users from './pages/users';
 import Books from './pages/books';
-import Reservations from './pages/reservations';
 import BorrowReturn from './pages/borrow-return';
 import Settings from './pages/settings';
 import Cookies from 'js-cookie';
@@ -52,15 +51,6 @@ const App = () => {
       component: (
         <AuthWrapper>
           <Books />
-        </AuthWrapper>
-      ),
-      show: true,
-    },
-    {
-      path: '/reservations',
-      component: (
-        <AuthWrapper>
-          <Reservations />
         </AuthWrapper>
       ),
       show: true,

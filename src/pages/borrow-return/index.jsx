@@ -5,6 +5,7 @@ import axiosInstance from '../../axios';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
 import ReturnBookModal from './ReturnBookModal';
+import BorrowDetailsModal from './BorrowDetailsModal';
 
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
@@ -15,6 +16,7 @@ const BorrowReturn = () => {
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
 
   const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
+  const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
   const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
     useState(null);
 
@@ -42,7 +44,6 @@ const BorrowReturn = () => {
   const fetchBooks = async () => {
     try {
       const response = await axiosInstance.get('/books');
-      console.log({ response });
       setBooks(response.data);
     } catch (error) {
       message.error('Error fetching books');
@@ -69,6 +70,11 @@ const BorrowReturn = () => {
     setIsReturnModalVisible(true);
   };
 
+  const showHistoryModal = (borrowingHistoryId) => {
+    setSelectedBorrowingHistoryId(borrowingHistoryId);
+    setIsHistoryModalVisible(true);
+  };
+
   const handleReturnOk = () => {
     setIsReturnModalVisible(false);
     fetchBorrowingHistories();
@@ -88,7 +94,13 @@ const BorrowReturn = () => {
         },
       ];
     }
-    return [];
+    return [
+      {
+        label: 'See details',
+        key: 'details',
+        onClick: () => showHistoryModal(record._id),
+      },
+    ];
   };
 
   const columns = [
@@ -263,6 +275,12 @@ const BorrowReturn = () => {
         isModalVisible={isReturnModalVisible}
         handleOk={handleReturnOk}
         handleCancel={handleReturnCancel}
+        borrowingHistoryId={selectedBorrowingHistoryId}
+      />
+
+      <BorrowDetailsModal
+        isModalVisible={isHistoryModalVisible}
+        setIsHistoryModalVisible={setIsHistoryModalVisible}
         borrowingHistoryId={selectedBorrowingHistoryId}
       />
 
