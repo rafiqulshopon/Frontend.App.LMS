@@ -1,16 +1,14 @@
 import { useState } from 'react';
+import { Select } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
 
 const Signup = () => {
-  const [signupData, setSignupData] = useState({});
+  const [signupData, setSignupData] = useState({ role: 'student' });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  console.log({ signupData });
-
   const handleSignup = async (e) => {
-    console.log('clicked');
     e.preventDefault();
     setError(null);
 
@@ -119,7 +117,9 @@ const Signup = () => {
                     htmlFor='studentId'
                     className='block mb-2 text-sm font-medium text-gray-900'
                   >
-                    Student Id
+                    {signupData?.role === 'student'
+                      ? 'Student Id'
+                      : 'Teacher Id'}
                   </label>
                   <input
                     type='text'
@@ -132,7 +132,11 @@ const Signup = () => {
                       })
                     }
                     className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-                    placeholder='Enter your student id'
+                    placeholder={
+                      signupData?.role === 'student'
+                        ? 'Enter your student id'
+                        : 'Enter your teacher id'
+                    }
                     required
                   />
                 </div>
@@ -169,20 +173,17 @@ const Signup = () => {
                   >
                     Role
                   </label>
-                  <input
-                    type='text'
-                    name='role'
-                    id='role'
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        role: e.target.value,
-                      })
+                  <Select
+                    className='h-11'
+                    defaultValue='student'
+                    style={{ width: '100%' }}
+                    onChange={(value) =>
+                      setSignupData({ ...signupData, role: value })
                     }
-                    className='bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5'
-                    placeholder='Enter your role'
-                    required
-                  />
+                  >
+                    <Option value='student'>Student</Option>
+                    <Option value='teacher'>Teacher</Option>
+                  </Select>
                 </div>
 
                 <div className='w-1/2'>
