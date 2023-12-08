@@ -1,16 +1,33 @@
 import { useEffect, useState } from 'react';
-import { Spin, Table, Modal, Input } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { Table, Input, Button, Dropdown, message, Space } from 'antd';
 import axiosInstance from '../../axios';
-import { SearchOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
+import AddBookModal from './AddBookModal';
+import EditBookModal from './EditBookModal';
+import useDebounce from '../../helpers/hooks/useDebounce';
+import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
+import { isAdminUser } from '../../utils/apphelpers';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState({
+    edit: false,
+    add: false,
+  });
+  const [editBookId, setEditBookId] = useState(null);
+  const navigate = useNavigate();
+  const isAdmin = isAdminUser();
 
   // Handlers for modal
-  const showModal = () => {
-    setIsModalVisible(true);
+  const showModal = (context, bookId) => {
+    setIsModalVisible((prevState) => ({
+      ...prevState,
+      [context]: true,
+    }));
+    setEditBookId(bookId);
   };
 
   const handleOk = () => {
@@ -19,6 +36,82 @@ const Books = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const fetchBooks = async () => {
+    try {
+      const response = await axiosInstance.get('/books');
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchBooks = async (title = '', department = '') => {
+    let queryData = {};
+    if (title) queryData.title = title;
+    if (department) queryData.department = department;
+
+    try {
+      const response = await axiosInstance.post('/search-books', queryData);
+      setBooks(response.data);
+    } catch (error) {
+      message.error('Error fetching books');
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQueryData = useDebounce((value) => {
+    setLoading(true);
+    searchBooks(value);
+  }, 500);
+
+  const handleSearchChange = (event) => {
+    setSearchKeyword(event.target.value);
+    updateQueryData(event.target.value);
+  };
+
+  const handleDeleteBook = async (bookId) => {
+    try {
+      await axiosInstance.delete(`/book/${bookId}`);
+      message.success('Book deleted successfully');
+      fetchBooks();
+    } catch (error) {
+      message.error('Failed to delete book');
+      console.error('Error deleting the book:', error);
+    }
+  };
+
+  const actionMenu = (record) => {
+    const menuItems = [
+      {
+        label: 'View details',
+        key: 'view',
+        onClick: () => navigate(`/book/${record._id}`),
+      },
+    ];
+
+    if (isAdmin) {
+      menuItems.push(
+        {
+          label: 'Edit',
+          key: 'edit',
+          onClick: () => showModal('edit', record._id),
+        },
+        {
+          label: 'Delete',
+          key: 'delete',
+          onClick: () => handleDeleteBook(record?._id),
+        }
+      );
+    }
+
+    return menuItems;
   };
 
   const columns = [
@@ -62,75 +155,97 @@ const Books = () => {
       dataIndex: 'currentQuantity',
       key: 'currentQuantity',
     },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Dropdown
+          menu={{
+            items: actionMenu(record),
+          }}
+          trigger={['click']}
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              <EllipsisOutlined />
+            </Space>
+          </a>
+        </Dropdown>
+      ),
+    },
   ];
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axiosInstance.get('/books');
-        setBooks(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
-    };
-
     fetchBooks();
   }, []);
 
+  const departmentOptions = [
+    { label: 'CSE', value: 'CSE' },
+    { label: 'LHR', value: 'LHR' },
+    { label: 'PHR', value: 'PHR' },
+    { label: 'ENG', value: 'ENG' },
+  ];
+
+  const handleSelectionChange = (value) => {
+    setLoading(true);
+    searchBooks('', value);
+  };
+
   return (
-    <div className='mt-4 mr-4'>
-      <div className='flex justify-between mb-4'>
-        <Input
-          placeholder='Search books'
-          className='w-1/4'
-          prefix={<SearchOutlined />}
-        />
-        <button
-          onClick={showModal}
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-        >
-          Add Book
-        </button>
-      </div>
-      <Modal
-        title='Add New Book'
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <button
-            key='back'
-            onClick={handleCancel}
-            className='bg-transparent hover:bg-gray-100 text-gray-700 mr-2 font-semibold py-2 px-4 border border-gray-300 rounded shadow-sm hover:shadow'
-          >
-            Cancel
-          </button>,
-          <button
-            key='submit'
-            onClick={handleOk}
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
+      <div className='flex justify-between items-center mb-4'>
+        <div className='flex gap-4 flex-grow'>
+          <Input
+            placeholder='Search books'
+            className='w-1/4'
+            prefix={<SearchOutlined />}
+            value={searchKeyword}
+            onChange={handleSearchChange}
+          />
+
+          <AppFilterRadio
+            options={departmentOptions}
+            onChange={handleSelectionChange}
+            btn_text='Department'
+          />
+        </div>
+
+        {isAdmin ? (
+          <Button
+            type='primary'
+            className='bg-blue-500 hover:bg-blue-700 text-white'
+            onClick={() => showModal('add')}
           >
             Add Book
-          </button>,
-        ]}
-      >
-        <p>Some contents...</p>
-      </Modal>
-      {loading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <Spin size='large' />
-        </div>
-      ) : (
-        <Table dataSource={books} columns={columns} rowKey='_id' />
-      )}
+          </Button>
+        ) : (
+          ''
+        )}
+      </div>
+
+      <AddBookModal
+        isModalVisible={isModalVisible?.add}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        fetchBooks={fetchBooks}
+      />
+
+      <EditBookModal
+        isModalVisible={isModalVisible?.edit}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        fetchBooks={fetchBooks}
+        bookId={editBookId}
+      />
+
+      <Table
+        dataSource={books}
+        columns={columns}
+        rowKey='_id'
+        loading={loading}
+        pagination={false}
+        className='rounded-lg overflow-hidden'
+      />
     </div>
   );
 };

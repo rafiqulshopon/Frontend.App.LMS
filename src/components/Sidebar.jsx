@@ -1,41 +1,103 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, Book, Star, Repeat, Settings } from 'react-feather';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Layout, Menu, Modal } from 'antd';
+import {
+  HomeOutlined,
+  UserOutlined,
+  BookOutlined,
+  SyncOutlined,
+  TeamOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
+import Cookies from 'js-cookie';
+import { isAdminUser } from '../utils/apphelpers';
+
+const { Sider } = Layout;
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const isAdmin = isAdminUser();
+
+  const handleLogout = () => {
+    Cookies.remove('accessToken');
+    navigate('/login');
+  };
+
+  const showConfirmLogout = () => {
+    Modal.confirm({
+      title: 'Do you want to logout?',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#1890ff',
+          borderColor: '#1890ff',
+          color: 'white',
+        },
+      },
+      onOk() {
+        handleLogout();
+      },
+      onCancel() {
+        console.log('Cancel logout');
+      },
+    });
+  };
 
   const items = [
-    { path: '/dashboard', label: 'Dashboard', icon: <Home size={18} /> },
-    { path: '/users', label: 'Users', icon: <Users size={18} /> },
-    { path: '/books', label: 'Books', icon: <Book size={18} /> },
-    { path: '/reservations', label: 'Reservations', icon: <Star size={18} /> },
+    { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
+    ...(isAdmin
+      ? [{ path: '/users', label: 'Users', icon: <TeamOutlined /> }]
+      : []),
+    { path: '/books', label: 'Books', icon: <BookOutlined /> },
     {
       path: '/borrow-return',
       label: 'Borrow & Return',
-      icon: <Repeat size={18} />,
+      icon: <SyncOutlined />,
     },
-    { path: '/settings', label: 'Settings', icon: <Settings size={18} /> },
+    { path: '/profile', label: 'My profile', icon: <UserOutlined /> },
+    { label: 'Logout', icon: <LogoutOutlined />, onClick: showConfirmLogout },
   ];
 
   return (
-    <div className='h-full w-64 p-6 bg-gray-800 mr-6 text-white'>
-      <div className='text-xl mb-6'>LMS</div>
-      <ul>
-        {items.map((item) => (
-          <li key={item.path}>
-            <Link
-              to={item.path}
-              className={`flex items-center space-x-3 mb-2 py-2 px-4 rounded transition-colors ${
-                location.pathname === item.path ? 'bg-gray-700' : ''
-              }`}
-            >
-              <span className='mr-2'>{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Sider
+      width={200}
+      style={{
+        color: 'white',
+        backgroundColor: 'white',
+        height: '100vh',
+        paddingRight: '1rem',
+        overflow: 'auto',
+      }}
+    >
+      <div
+        className='logo'
+        style={{
+          padding: '1rem',
+          backgroundColor: 'white',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          src='https://www.activeliving.ie/content/uploads/2020/04/placeholder-logo-2.png'
+          alt='LMS Logo'
+          style={{ maxHeight: '50px' }}
+        />
+      </div>
+      <Menu
+        mode='inline'
+        defaultSelectedKeys={[location.pathname]}
+        style={{ height: '100%', borderRight: 0 }}
+        items={items.map((item) => ({
+          key: item.path || item.label,
+          icon: item.icon,
+          label: item.path ? (
+            <Link to={item.path}>{item.label}</Link>
+          ) : (
+            item.label
+          ),
+          onClick: item.onClick,
+        }))}
+      />
+    </Sider>
   );
 };
 

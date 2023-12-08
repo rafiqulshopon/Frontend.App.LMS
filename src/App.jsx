@@ -10,29 +10,96 @@ import NotFoundPage from './components/NotFoundPage';
 import Dashboard from './pages/dashboard';
 import Users from './pages/users';
 import Books from './pages/books';
-import Reservations from './pages/reservations';
 import BorrowReturn from './pages/borrow-return';
 import Settings from './pages/settings';
 import Cookies from 'js-cookie';
 import { AuthContext } from './context/AuthContext';
 import SingleUser from './pages/users/SingleUser';
+import BookDetails from './pages/books/BookDetails';
+import Profile from './pages/profile';
+import AuthWrapper from './AuthWrapper';
+import RootRedirect from './RootRedirect';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
 
   const routes = [
-    { path: '/', component: <HomePage />, show: true },
     { path: '/login', component: <Login />, show: true },
     { path: '/signup', component: <Signup />, show: true },
     { path: '/forget-password', component: <ForgetPassword />, show: true },
     { path: '/verify-otp', component: <VerifyOTP />, show: true },
-    { path: '/dashboard', component: <Dashboard />, show: isLoggedIn },
-    { path: '/users', component: <Users />, show: isLoggedIn },
-    { path: '/books', component: <Books />, show: isLoggedIn },
-    { path: '/reservations', component: <Reservations />, show: isLoggedIn },
-    { path: '/borrow-return', component: <BorrowReturn />, show: isLoggedIn },
-    { path: '/settings', component: <Settings />, show: isLoggedIn },
-    { path: '/user/:id', component: <SingleUser />, show: isLoggedIn },
+    {
+      path: '/dashboard',
+      component: (
+        <AuthWrapper>
+          <Dashboard />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/users',
+      component: (
+        <AuthWrapper>
+          <Users />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/books',
+      component: (
+        <AuthWrapper>
+          <Books />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/borrow-return',
+      component: (
+        <AuthWrapper>
+          <BorrowReturn />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/settings',
+      component: (
+        <AuthWrapper>
+          <Settings />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/user/:id',
+      component: (
+        <AuthWrapper>
+          <SingleUser />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/book/:id',
+      component: (
+        <AuthWrapper>
+          <BookDetails />
+        </AuthWrapper>
+      ),
+      show: true,
+    },
+    {
+      path: '/profile',
+      component: (
+        <AuthWrapper>
+          <Profile />
+        </AuthWrapper>
+      ),
+      show: isLoggedIn,
+    },
   ];
 
   return (
@@ -50,6 +117,7 @@ const App = () => {
                   />
                 )
             )}
+            <Route path='/' element={<RootRedirect />} />
             <Route path='/404' element={<NotFoundPage />} />
             <Route path='*' element={<Navigate to='/404' replace />} />
           </Routes>
