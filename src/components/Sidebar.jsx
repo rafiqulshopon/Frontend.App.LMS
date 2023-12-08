@@ -9,12 +9,14 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
+import { isAdminUser } from '../utils/apphelpers';
 
 const { Sider } = Layout;
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isAdmin = isAdminUser();
 
   const handleLogout = () => {
     Cookies.remove('accessToken');
@@ -42,7 +44,9 @@ const Sidebar = () => {
 
   const items = [
     { path: '/dashboard', label: 'Dashboard', icon: <HomeOutlined /> },
-    { path: '/users', label: 'Users', icon: <TeamOutlined /> },
+    ...(isAdmin
+      ? [{ path: '/users', label: 'Users', icon: <TeamOutlined /> }]
+      : []),
     { path: '/books', label: 'Books', icon: <BookOutlined /> },
     {
       path: '/borrow-return',
