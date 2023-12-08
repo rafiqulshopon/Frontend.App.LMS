@@ -9,11 +9,14 @@ import BorrowDetailsModal from './BorrowDetailsModal';
 import { isAdminUser, getUserId } from '../../utils/apphelpers';
 
 const BorrowReturn = () => {
+  const isAdmin = isAdminUser();
+  const userId = getUserId();
   const [borrowingHistories, setBorrowingHistories] = useState([]);
   const [users, setUsers] = useState([]);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [queryData, setQueryData] = useState({});
+  const initialQueryData = isAdmin ? {} : { userId };
+  const [queryData, setQueryData] = useState(initialQueryData);
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
 
   const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
@@ -21,15 +24,9 @@ const BorrowReturn = () => {
   const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
     useState(null);
 
-  const userId = getUserId();
-  const isAdmin = isAdminUser();
-
   const fetchBorrowingHistories = async () => {
     try {
-      const response = await axiosInstance.post(
-        '/borrow-list',
-        isAdmin ? queryData : { userId }
-      );
+      const response = await axiosInstance.post('/borrow-list', queryData);
       setBorrowingHistories(response.data.borrowingHistories || []);
     } catch (error) {
       message.error('Error fetching borrowing histories');
