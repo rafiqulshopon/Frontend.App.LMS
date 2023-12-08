@@ -214,18 +214,32 @@ const BorrowReturn = () => {
 
   const handleUserChange = (userId) => {
     setLoading(true);
-    setQueryData((prevState) => ({
-      ...prevState,
-      userId,
-    }));
+    setQueryData((prevState) => {
+      const updatedState = { ...prevState };
+
+      if (userId) {
+        updatedState.userId = userId;
+      } else {
+        delete updatedState.userId;
+      }
+
+      return updatedState;
+    });
   };
 
   const handleBookChange = (bookId) => {
     setLoading(true);
-    setQueryData((prevState) => ({
-      ...prevState,
-      bookId,
-    }));
+    setQueryData((prevState) => {
+      const updatedState = { ...prevState };
+
+      if (bookId) {
+        updatedState.bookId = bookId;
+      } else {
+        delete updatedState.bookId;
+      }
+
+      return updatedState;
+    });
   };
 
   return (
