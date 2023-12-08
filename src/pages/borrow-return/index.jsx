@@ -199,10 +199,17 @@ const BorrowReturn = () => {
 
   const handleSelectionChange = (status) => {
     setLoading(true);
-    setQueryData((prevState) => ({
-      ...prevState,
-      status,
-    }));
+    setQueryData((prevState) => {
+      const updatedState = { ...prevState };
+
+      if (status) {
+        updatedState.status = status;
+      } else {
+        delete updatedState.status;
+      }
+
+      return updatedState;
+    });
   };
 
   const handleUserChange = (userId) => {
