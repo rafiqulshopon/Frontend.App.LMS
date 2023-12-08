@@ -6,6 +6,7 @@ import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import AssignBookModal from './AssignBookModal';
 import ReturnBookModal from './ReturnBookModal';
 import BorrowDetailsModal from './BorrowDetailsModal';
+import { isAdminUser, getUserId } from '../../utils/apphelpers';
 
 const BorrowReturn = () => {
   const [borrowingHistories, setBorrowingHistories] = useState([]);
@@ -20,9 +21,15 @@ const BorrowReturn = () => {
   const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
     useState(null);
 
+  const userId = getUserId();
+  const isAdmin = isAdminUser();
+
   const fetchBorrowingHistories = async () => {
     try {
-      const response = await axiosInstance.post('/borrow-list', queryData);
+      const response = await axiosInstance.post(
+        '/borrow-list',
+        isAdmin ? queryData : { userId }
+      );
       setBorrowingHistories(response.data.borrowingHistories || []);
     } catch (error) {
       message.error('Error fetching borrowing histories');
@@ -85,22 +92,23 @@ const BorrowReturn = () => {
   };
 
   const actionMenu = (record) => {
-    if (record.status !== 'returned') {
-      return [
-        {
-          label: 'Return Book',
-          key: 'return',
-          onClick: () => showReturnModal(record._id),
-        },
-      ];
-    }
-    return [
+    let menuItems = [
       {
         label: 'See details',
         key: 'details',
         onClick: () => showHistoryModal(record._id),
       },
     ];
+
+    if (record.status !== 'returned' && isAdmin) {
+      menuItems.unshift({
+        label: 'Return Book',
+        key: 'return',
+        onClick: () => showReturnModal(record._id),
+      });
+    }
+
+    return menuItems;
   };
 
   const columns = [
@@ -220,33 +228,41 @@ const BorrowReturn = () => {
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
-          <Select
-            placeholder='Select User'
-            onChange={handleUserChange}
-            style={{ width: 200 }}
-            allowClear
-            onClear={() => fetchBorrowingHistories()}
-          >
-            {users.map((user) => (
-              <Option key={user._id} value={user._id}>
-                {user.name.first} {user.name.last}
-              </Option>
-            ))}
-          </Select>
+          {isAdmin ? (
+            <Select
+              placeholder='Select User'
+              onChange={handleUserChange}
+              style={{ width: 200 }}
+              allowClear
+              onClear={() => fetchBorrowingHistories()}
+            >
+              {users.map((user) => (
+                <Option key={user._id} value={user._id}>
+                  {user.name.first} {user.name.last}
+                </Option>
+              ))}
+            </Select>
+          ) : (
+            ''
+          )}
 
-          <Select
-            placeholder='Select Book'
-            onChange={handleBookChange}
-            style={{ width: 200 }}
-            allowClear
-            onClear={() => fetchBorrowingHistories()}
-          >
-            {books.map((book) => (
-              <Option key={book._id} value={book._id}>
-                {book.title}
-              </Option>
-            ))}
-          </Select>
+          {isAdmin ? (
+            <Select
+              placeholder='Select Book'
+              onChange={handleBookChange}
+              style={{ width: 200 }}
+              allowClear
+              onClear={() => fetchBorrowingHistories()}
+            >
+              {books.map((book) => (
+                <Option key={book._id} value={book._id}>
+                  {book.title}
+                </Option>
+              ))}
+            </Select>
+          ) : (
+            ''
+          )}
 
           <AppFilterRadio
             options={statusOptions}
@@ -254,14 +270,17 @@ const BorrowReturn = () => {
             btn_text='Status'
           />
         </div>
-
-        <Button
-          type='primary'
-          className='bg-blue-500 hover:bg-blue-700 text-white'
-          onClick={showAssignModal}
-        >
-          Assign Book
-        </Button>
+        {isAdmin ? (
+          <Button
+            type='primary'
+            className='bg-blue-500 hover:bg-blue-700 text-white'
+            onClick={showAssignModal}
+          >
+            Assign Book
+          </Button>
+        ) : (
+          ''
+        )}
       </div>
 
       <AssignBookModal

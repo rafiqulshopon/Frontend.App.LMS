@@ -7,6 +7,7 @@ import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
 import useDebounce from '../../helpers/hooks/useDebounce';
 import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
+import { isAdminUser } from '../../utils/apphelpers';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -18,6 +19,7 @@ const Books = () => {
   });
   const [editBookId, setEditBookId] = useState(null);
   const navigate = useNavigate();
+  const isAdmin = isAdminUser();
 
   // Handlers for modal
   const showModal = (context, bookId) => {
@@ -85,23 +87,32 @@ const Books = () => {
     }
   };
 
-  const actionMenu = (record) => [
-    {
-      label: 'View details',
-      key: 'view',
-      onClick: () => navigate(`/book/${record._id}`),
-    },
-    {
-      label: 'Edit',
-      key: 'edit',
-      onClick: () => showModal('edit', record._id),
-    },
-    {
-      label: 'Delete',
-      key: 'delete',
-      onClick: () => handleDeleteBook(record?._id),
-    },
-  ];
+  const actionMenu = (record) => {
+    const menuItems = [
+      {
+        label: 'View details',
+        key: 'view',
+        onClick: () => navigate(`/book/${record._id}`),
+      },
+    ];
+
+    if (isAdmin) {
+      menuItems.push(
+        {
+          label: 'Edit',
+          key: 'edit',
+          onClick: () => showModal('edit', record._id),
+        },
+        {
+          label: 'Delete',
+          key: 'delete',
+          onClick: () => handleDeleteBook(record?._id),
+        }
+      );
+    }
+
+    return menuItems;
+  };
 
   const columns = [
     {
@@ -199,13 +210,17 @@ const Books = () => {
           />
         </div>
 
-        <Button
-          type='primary'
-          className='bg-blue-500 hover:bg-blue-700 text-white'
-          onClick={() => showModal('add')}
-        >
-          Add Book
-        </Button>
+        {isAdmin ? (
+          <Button
+            type='primary'
+            className='bg-blue-500 hover:bg-blue-700 text-white'
+            onClick={() => showModal('add')}
+          >
+            Add Book
+          </Button>
+        ) : (
+          ''
+        )}
       </div>
 
       <AddBookModal
