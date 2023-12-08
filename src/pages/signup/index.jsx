@@ -17,13 +17,15 @@ const Signup = () => {
       return;
     }
 
-    if (signupData?.confirmPassword) delete signupData?.confirmPassword;
+    const updatedData = { ...signupData };
+
+    if (updatedData?.confirmPassword) delete updatedData?.confirmPassword;
 
     try {
       const response = await axiosInstance.post('/auth/signup', {
-        ...signupData,
+        ...updatedData,
       });
-      localStorage.setItem('email', signupData?.email);
+      localStorage.setItem('email', updatedData?.email);
       navigate('/verify-otp');
       console.log({ response });
     } catch (err) {
