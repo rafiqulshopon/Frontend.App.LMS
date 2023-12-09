@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
-import { Card, Statistic, Row, Col, Typography, List } from 'antd';
+import { Card, Statistic, Row, Col, Spin, Typography, List } from 'antd';
 import {
   UserOutlined,
   BookOutlined,
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className='flex justify-center items-center h-screen'>
-        Loading...
+        <Spin size='large' />
       </div>
     );
   }
