@@ -106,8 +106,23 @@ const AdminDashboard = () => {
       <Row gutter={[16, 16]} className='px-6 py-2'>
         <Col xs={24} md={12} className='mb-4'>
           <Card
-            title='Users By Role'
+            title='Books By Category'
             className='shadow-lg rounded-lg overflow-hidden mb-4'
+          >
+            <List
+              dataSource={dashboardData.booksByCategory}
+              renderItem={(item) => (
+                <List.Item key={item._id} className='border-b last:border-b-0'>
+                  <span className='font-semibold'>{item._id}</span>:{' '}
+                  {item.count}
+                </List.Item>
+              )}
+            />
+          </Card>
+
+          <Card
+            title='Users By Role'
+            className='shadow-lg rounded-lg overflow-hidden'
           >
             <List
               dataSource={dashboardData.usersByRole}
@@ -122,10 +137,12 @@ const AdminDashboard = () => {
               )}
             />
           </Card>
+        </Col>
 
+        <Col xs={24} md={12} className='mb-4'>
           <Card
             title='Most Borrowed Books'
-            className='shadow-lg rounded-lg overflow-hidden'
+            className='shadow-lg rounded-lg overflow-hidden mb-4'
           >
             <List
               dataSource={dashboardData.mostBorrowedBooks}
@@ -133,23 +150,6 @@ const AdminDashboard = () => {
                 <List.Item key={item._id} className='border-b last:border-b-0'>
                   <span className='font-semibold'>{item.bookTitle}</span> by{' '}
                   {item.bookAuthor} - Borrowed {item.count} times
-                </List.Item>
-              )}
-            />
-          </Card>
-        </Col>
-
-        <Col xs={24} md={12} className='mb-4'>
-          <Card
-            title='Books By Category'
-            className='shadow-lg rounded-lg overflow-hidden mb-4'
-          >
-            <List
-              dataSource={dashboardData.booksByCategory}
-              renderItem={(item) => (
-                <List.Item key={item._id} className='border-b last:border-b-0'>
-                  <span className='font-semibold'>{item._id}</span>:{' '}
-                  {item.count}
                 </List.Item>
               )}
             />
