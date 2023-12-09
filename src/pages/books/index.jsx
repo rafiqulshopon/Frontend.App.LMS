@@ -192,7 +192,7 @@ const Books = () => {
   };
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
           <Input
@@ -244,7 +244,7 @@ const Books = () => {
         rowKey='_id'
         loading={loading}
         pagination={false}
-        className='rounded-lg overflow-hidden'
+        className='rounded-lg'
       />
     </div>
   );

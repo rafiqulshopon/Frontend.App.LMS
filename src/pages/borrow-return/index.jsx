@@ -279,7 +279,7 @@ const BorrowReturn = () => {
   };
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
           {isAdmin ? (
@@ -370,7 +370,7 @@ const BorrowReturn = () => {
         rowKey='_id'
         pagination={false}
         loading={loading}
-        className='rounded-lg overflow-hidden'
+        className='rounded-lg'
       />
     </div>
   );
