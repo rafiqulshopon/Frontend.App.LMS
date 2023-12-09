@@ -59,9 +59,11 @@ const BorrowReturn = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-    fetchBooks();
-  }, []);
+    if (isAdmin) {
+      fetchUsers();
+      fetchBooks();
+    }
+  }, [isAdmin]);
 
   useEffect(() => {
     fetchBorrowingHistories();
@@ -337,32 +339,40 @@ const BorrowReturn = () => {
         )}
       </div>
 
-      <AssignBookModal
-        isModalVisible={isAssignModalVisible}
-        handleOk={handleAssignOk}
-        handleCancel={handleAssignCancel}
-        refreshBorrowingHistories={fetchBorrowingHistories}
-      />
+      {isAssignModalVisible && (
+        <AssignBookModal
+          isModalVisible={isAssignModalVisible}
+          handleOk={handleAssignOk}
+          handleCancel={handleAssignCancel}
+          refreshBorrowingHistories={fetchBorrowingHistories}
+        />
+      )}
 
-      <ReturnBookModal
-        isModalVisible={isReturnModalVisible}
-        handleOk={handleReturnOk}
-        handleCancel={handleReturnCancel}
-        borrowingHistoryId={selectedBorrowingHistoryId}
-      />
+      {isReturnModalVisible && (
+        <ReturnBookModal
+          isModalVisible={isReturnModalVisible}
+          handleOk={handleReturnOk}
+          handleCancel={handleReturnCancel}
+          borrowingHistoryId={selectedBorrowingHistoryId}
+        />
+      )}
 
-      <AddReviewModal
-        isModalVisible={isShowAddReviewModalVisible}
-        handleOk={handleReviewOk}
-        handleCancel={handleReviewCancel}
-        selectedbookId={selectedbookId}
-      />
+      {isShowAddReviewModalVisible && (
+        <AddReviewModal
+          isModalVisible={isShowAddReviewModalVisible}
+          handleOk={handleReviewOk}
+          handleCancel={handleReviewCancel}
+          selectedbookId={selectedbookId}
+        />
+      )}
 
-      <BorrowDetailsModal
-        isModalVisible={isHistoryModalVisible}
-        setIsHistoryModalVisible={setIsHistoryModalVisible}
-        borrowingHistoryId={selectedBorrowingHistoryId}
-      />
+      {isHistoryModalVisible && (
+        <BorrowDetailsModal
+          isModalVisible={isHistoryModalVisible}
+          setIsHistoryModalVisible={setIsHistoryModalVisible}
+          borrowingHistoryId={selectedBorrowingHistoryId}
+        />
+      )}
 
       <Table
         dataSource={borrowingHistories}
