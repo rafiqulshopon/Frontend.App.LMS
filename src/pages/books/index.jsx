@@ -223,20 +223,24 @@ const Books = () => {
         )}
       </div>
 
-      <AddBookModal
-        isModalVisible={isModalVisible?.add}
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        fetchBooks={fetchBooks}
-      />
+      {isModalVisible?.add && (
+        <AddBookModal
+          isModalVisible={isModalVisible?.add}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          fetchBooks={fetchBooks}
+        />
+      )}
 
-      <EditBookModal
-        isModalVisible={isModalVisible?.edit}
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        fetchBooks={fetchBooks}
-        bookId={editBookId}
-      />
+      {isModalVisible?.edit && (
+        <EditBookModal
+          isModalVisible={isModalVisible?.edit}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          fetchBooks={fetchBooks}
+          bookId={editBookId}
+        />
+      )}
 
       <Table
         dataSource={books}
