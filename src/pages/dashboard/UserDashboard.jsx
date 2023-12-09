@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
-import { Card, List, Typography } from 'antd';
+import { Card, List, Spin, Typography } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -28,11 +28,10 @@ const UserDashboard = () => {
   if (loading) {
     return (
       <div className='flex justify-center items-center h-screen'>
-        Loading...
+        <Spin size='large' />
       </div>
     );
   }
-
   return (
     <div className='mt-4 mx-4 h-screen overflow-auto'>
       <Title level={2} className='mb-8'>
