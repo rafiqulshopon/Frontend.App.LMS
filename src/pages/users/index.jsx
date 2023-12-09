@@ -184,7 +184,7 @@ const Users = () => {
   }, []);
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between mb-4'>
         <Input
           placeholder='Search users'
@@ -218,15 +218,16 @@ const Users = () => {
       >
         <p>Some contents...</p>
       </Modal>
-
-      <Table
-        dataSource={users}
-        columns={columns}
-        rowKey='_id'
-        loading={loading}
-        pagination={false}
-        className='rounded-lg'
-      />
+      <div className='max-h-[calc(108vh-200px)] overflow-y-auto w-full'>
+        <Table
+          dataSource={users}
+          columns={columns}
+          rowKey='_id'
+          loading={loading}
+          pagination={false}
+          className='rounded-lg'
+        />
+      </div>
     </div>
   );
 };
