@@ -7,6 +7,7 @@ import AssignBookModal from './AssignBookModal';
 import ReturnBookModal from './ReturnBookModal';
 import BorrowDetailsModal from './BorrowDetailsModal';
 import { isAdminUser, getUserId } from '../../utils/apphelpers';
+import AddReviewModal from './AddReviewModal';
 
 const BorrowReturn = () => {
   const isAdmin = isAdminUser();
@@ -21,8 +22,11 @@ const BorrowReturn = () => {
 
   const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
+  const [isShowAddReviewModalVisible, setIsShowAddReviewModalVisible] =
+    useState(false);
   const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
     useState(null);
+  const [selectedbookId, setSelectedbookId] = useState('');
 
   const fetchBorrowingHistories = async () => {
     try {
@@ -79,6 +83,11 @@ const BorrowReturn = () => {
     setIsHistoryModalVisible(true);
   };
 
+  const showAddReviewModal = (bookId) => {
+    setSelectedbookId(bookId);
+    setIsShowAddReviewModalVisible(true);
+  };
+
   const handleReturnOk = () => {
     setIsReturnModalVisible(false);
     fetchBorrowingHistories();
@@ -86,6 +95,15 @@ const BorrowReturn = () => {
 
   const handleReturnCancel = () => {
     setIsReturnModalVisible(false);
+  };
+
+  const handleReviewCancel = () => {
+    setIsShowAddReviewModalVisible(false);
+  };
+
+  const handleReviewOk = () => {
+    setIsShowAddReviewModalVisible(false);
+    fetchBorrowingHistories();
   };
 
   const actionMenu = (record) => {
@@ -102,6 +120,24 @@ const BorrowReturn = () => {
         label: 'Return Book',
         key: 'return',
         onClick: () => showReturnModal(record._id),
+      });
+    }
+
+    const userHasReviewed = record?.book?.reviews?.some(
+      (review) => review?.user === userId
+    );
+
+    if (
+      record?.user?._id === userId &&
+      record?.status === 'returned' &&
+      !userHasReviewed
+    ) {
+      menuItems.push({
+        label: 'Give Review',
+        key: 'giveReview',
+        onClick: () => {
+          showAddReviewModal(record?.book?._id);
+        },
       });
     }
 
@@ -313,6 +349,13 @@ const BorrowReturn = () => {
         handleOk={handleReturnOk}
         handleCancel={handleReturnCancel}
         borrowingHistoryId={selectedBorrowingHistoryId}
+      />
+
+      <AddReviewModal
+        isModalVisible={isShowAddReviewModalVisible}
+        handleOk={handleReviewOk}
+        handleCancel={handleReviewCancel}
+        selectedbookId={selectedbookId}
       />
 
       <BorrowDetailsModal
