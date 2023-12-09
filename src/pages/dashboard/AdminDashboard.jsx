@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className='mt-4 mr-4 ml-4 h-screen overflow-auto'>
+    <div className='mt-2 mr-4 h-screen overflow-auto'>
       <Title level={2} className='px-6 text-gray-800'>
         Dashboard
       </Title>
