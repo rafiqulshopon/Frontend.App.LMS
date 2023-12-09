@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 import { isAdminUser } from '../utils/apphelpers';
+import { jwtDecode } from 'jwt-decode';
 
 const { Sider } = Layout;
 
@@ -17,6 +18,16 @@ const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdmin = isAdminUser();
+
+  let userData;
+  const token = Cookies.get('accessToken');
+  if (token) {
+    try {
+      userData = jwtDecode(token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+  }
 
   const handleLogout = () => {
     Cookies.remove('accessToken');
@@ -58,45 +69,35 @@ const Sidebar = () => {
   ];
 
   return (
-    <Sider
-      width={200}
-      style={{
-        color: 'white',
-        backgroundColor: 'white',
-        height: '100vh',
-        paddingRight: '1rem',
-        overflow: 'auto',
-      }}
-    >
-      <div
-        className='logo'
-        style={{
-          padding: '1rem',
-          backgroundColor: 'white',
-          textAlign: 'center',
-        }}
-      >
-        <img
-          src='https://www.activeliving.ie/content/uploads/2020/04/placeholder-logo-2.png'
-          alt='LMS Logo'
-          style={{ maxHeight: '50px' }}
+    <Sider width={200} className='bg-white'>
+      <div>
+        <div className='m-6 p-4 flex items-center justify-center bg-gray-400 rounded-md'>
+          <span className='text-white text-2xl font-bold uppercase'>LMS</span>
+        </div>
+
+        <Menu
+          mode='inline'
+          defaultSelectedKeys={[location.pathname]}
+          style={{ height: '100%', borderRight: 0 }}
+          items={items.map((item) => ({
+            key: item.path || item.label,
+            icon: item.icon,
+            label: item.path ? (
+              <Link to={item.path}>{item.label}</Link>
+            ) : (
+              item.label
+            ),
+            onClick: item.onClick,
+          }))}
         />
       </div>
-      <Menu
-        mode='inline'
-        defaultSelectedKeys={[location.pathname]}
-        style={{ height: '100%', borderRight: 0 }}
-        items={items.map((item) => ({
-          key: item.path || item.label,
-          icon: item.icon,
-          label: item.path ? (
-            <Link to={item.path}>{item.label}</Link>
-          ) : (
-            item.label
-          ),
-          onClick: item.onClick,
-        }))}
-      />
+
+      {userData && (
+        <div className='text-center p-4 mt-[460px] text-gray-600 border-t'>
+          <div className='font-semibold'>{`${userData?.name?.first} ${userData?.name?.last}`}</div>
+          <div className='text-sm capitalize'>{userData?.role}</div>
+        </div>
+      )}
     </Sider>
   );
 };
