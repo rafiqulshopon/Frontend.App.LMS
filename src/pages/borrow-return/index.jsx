@@ -281,7 +281,7 @@ const BorrowReturn = () => {
   };
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
           {isAdmin ? (
@@ -373,15 +373,16 @@ const BorrowReturn = () => {
           borrowingHistoryId={selectedBorrowingHistoryId}
         />
       )}
-
-      <Table
-        dataSource={borrowingHistories}
-        columns={columns}
-        rowKey='_id'
-        pagination={false}
-        loading={loading}
-        className='rounded-lg'
-      />
+      <div className='max-h-[calc(108vh-200px)] overflow-y-auto w-full'>
+        <Table
+          dataSource={borrowingHistories}
+          columns={columns}
+          rowKey='_id'
+          pagination={false}
+          loading={loading}
+          className='rounded-lg'
+        />
+      </div>
     </div>
   );
 };
