@@ -7,6 +7,7 @@ import AssignBookModal from './AssignBookModal';
 import ReturnBookModal from './ReturnBookModal';
 import BorrowDetailsModal from './BorrowDetailsModal';
 import { isAdminUser, getUserId } from '../../utils/apphelpers';
+import AddReviewModal from './AddReviewModal';
 
 const BorrowReturn = () => {
   const isAdmin = isAdminUser();
@@ -21,8 +22,11 @@ const BorrowReturn = () => {
 
   const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
+  const [isShowAddReviewModalVisible, setIsShowAddReviewModalVisible] =
+    useState(false);
   const [selectedBorrowingHistoryId, setSelectedBorrowingHistoryId] =
     useState(null);
+  const [selectedbookId, setSelectedbookId] = useState('');
 
   const fetchBorrowingHistories = async () => {
     try {
@@ -79,6 +83,11 @@ const BorrowReturn = () => {
     setIsHistoryModalVisible(true);
   };
 
+  const showAddReviewModal = (bookId) => {
+    setSelectedbookId(bookId);
+    setIsShowAddReviewModalVisible(true);
+  };
+
   const handleReturnOk = () => {
     setIsReturnModalVisible(false);
     fetchBorrowingHistories();
@@ -86,6 +95,15 @@ const BorrowReturn = () => {
 
   const handleReturnCancel = () => {
     setIsReturnModalVisible(false);
+  };
+
+  const handleReviewCancel = () => {
+    setIsShowAddReviewModalVisible(false);
+  };
+
+  const handleReviewOk = () => {
+    setIsShowAddReviewModalVisible(false);
+    fetchBorrowingHistories();
   };
 
   const actionMenu = (record) => {
@@ -102,6 +120,24 @@ const BorrowReturn = () => {
         label: 'Return Book',
         key: 'return',
         onClick: () => showReturnModal(record._id),
+      });
+    }
+
+    const userHasReviewed = record?.book?.reviews?.some(
+      (review) => review?.user === userId
+    );
+
+    if (
+      record?.user?._id === userId &&
+      record?.status === 'returned' &&
+      !userHasReviewed
+    ) {
+      menuItems.push({
+        label: 'Give Review',
+        key: 'giveReview',
+        onClick: () => {
+          showAddReviewModal(record?.book?._id);
+        },
       });
     }
 
@@ -243,7 +279,7 @@ const BorrowReturn = () => {
   };
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex gap-4 flex-grow'>
           {isAdmin ? (
@@ -315,6 +351,13 @@ const BorrowReturn = () => {
         borrowingHistoryId={selectedBorrowingHistoryId}
       />
 
+      <AddReviewModal
+        isModalVisible={isShowAddReviewModalVisible}
+        handleOk={handleReviewOk}
+        handleCancel={handleReviewCancel}
+        selectedbookId={selectedbookId}
+      />
+
       <BorrowDetailsModal
         isModalVisible={isHistoryModalVisible}
         setIsHistoryModalVisible={setIsHistoryModalVisible}
@@ -327,7 +370,7 @@ const BorrowReturn = () => {
         rowKey='_id'
         pagination={false}
         loading={loading}
-        className='rounded-lg overflow-hidden'
+        className='rounded-lg'
       />
     </div>
   );

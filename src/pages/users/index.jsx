@@ -184,7 +184,7 @@ const Users = () => {
   }, []);
 
   return (
-    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
+    <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow h-screen overflow-auto'>
       <div className='flex justify-between mb-4'>
         <Input
           placeholder='Search users'
@@ -225,7 +225,7 @@ const Users = () => {
         rowKey='_id'
         loading={loading}
         pagination={false}
-        className='rounded-lg overflow-hidden'
+        className='rounded-lg'
       />
     </div>
   );
