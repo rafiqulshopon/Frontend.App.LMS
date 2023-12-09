@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
-import { Descriptions, Spin } from 'antd';
+import { Descriptions, Spin, List, Card, Rate } from 'antd';
 import { PageHeader } from '@ant-design/pro-layout';
 
 const BookDetails = () => {
@@ -73,6 +73,26 @@ const BookDetails = () => {
           {book.description}
         </Descriptions.Item>
       </Descriptions>
+
+      <div className='bg-white p-6 rounded-lg shadow mt-4'>
+        <h2 className='text-lg font-semibold mb-4'>Reviews</h2>
+        <List
+          dataSource={book.reviews}
+          itemLayout='vertical'
+          renderItem={(review) =>
+            review.comment ? (
+              <Card bordered={false}>
+                <p>
+                  <strong>{review.fullName}</strong>
+                </p>
+                <Rate disabled value={review.rating} />
+                <p>{review.comment}</p>
+                <small>{new Date(review.createdAt).toLocaleDateString()}</small>
+              </Card>
+            ) : null
+          }
+        />
+      </div>
     </div>
   );
 };
