@@ -17,7 +17,6 @@ import SingleUser from './pages/users/SingleUser';
 import BookDetails from './pages/books/BookDetails';
 import Profile from './pages/profile';
 import AuthWrapper from './AuthWrapper';
-import RootRedirect from './RootRedirect';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
