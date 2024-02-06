@@ -6,6 +6,7 @@ import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
 import useDebounce from '../../helpers/hooks/useDebounce';
+import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import { isAdminUser } from '../../utils/apphelpers';
 
 const Books = () => {
@@ -52,8 +53,8 @@ const Books = () => {
     }
   };
 
-  const searchBooks = useDebounce(async () => {
-    const { searchKeyword, department } = filters;
+  const searchBooks = async (currentFilters) => {
+    const { searchKeyword, department } = currentFilters;
     let queryData = {};
     if (searchKeyword) queryData.title = searchKeyword;
     if (department) queryData.department = department;
@@ -68,14 +69,19 @@ const Books = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const debouncedSearchBooks = useDebounce((currentFilters) => {
+    searchBooks(currentFilters);
   }, 500);
 
   const handleSearchChange = (event) => {
+    const newSearchKeyword = event.target.value;
     setFilters((prevState) => ({
       ...prevState,
-      searchKeyword: event.target.value,
+      searchKeyword: newSearchKeyword,
     }));
-    searchBooks();
+    debouncedSearchBooks({ ...filters, searchKeyword: newSearchKeyword });
   };
 
   const handleDeleteBook = async (bookId) => {
@@ -181,6 +187,19 @@ const Books = () => {
     fetchBooks();
   }, []);
 
+  const departmentOptions = [
+    { label: 'CSE', value: 'CSE' },
+    { label: 'LHR', value: 'LHR' },
+    { label: 'PHR', value: 'PHR' },
+    { label: 'ENG', value: 'ENG' },
+  ];
+
+  const handleDepartmentChange = (value) => {
+    const newFilters = { ...filters, department: value };
+    setFilters(newFilters);
+    debouncedSearchBooks(newFilters);
+  };
+
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
@@ -191,6 +210,12 @@ const Books = () => {
             prefix={<SearchOutlined />}
             value={filters?.searchKeyword}
             onChange={handleSearchChange}
+          />
+
+          <AppFilterRadio
+            options={departmentOptions}
+            onChange={handleDepartmentChange}
+            btn_text='Department'
           />
         </div>
 
