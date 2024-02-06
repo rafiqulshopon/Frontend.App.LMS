@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Modal,
   Form,
@@ -11,6 +10,7 @@ import {
   Row,
   Col,
 } from 'antd';
+import moment from 'moment';
 import axiosInstance from '../../axios';
 
 const { Option } = Select;
@@ -33,7 +33,7 @@ const AddBookModal = ({
     };
 
     try {
-      const response = await axiosInstance.post('/books', formattedValues);
+      await axiosInstance.post('/books', formattedValues);
       message.success('Book added successfully!');
       handleOk();
       fetchBooks();
@@ -42,6 +42,10 @@ const AddBookModal = ({
       message.error(error.response?.data?.message || 'Failed to add book.');
       console.error('Error adding book:', error);
     }
+  };
+
+  const disabledDate = (current) => {
+    return current && current > moment().endOf('day');
   };
 
   return (
@@ -106,7 +110,12 @@ const AddBookModal = ({
                 { required: true, message: 'Please select a published date!' },
               ]}
             >
-              <DatePicker style={{ width: '100%' }} />
+              <DatePicker
+                style={{ width: '100%' }}
+                disabledDate={disabledDate}
+                superNextIcon={false}
+                superPrevIcon={false}
+              />
             </Form.Item>
           </Col>
         </Row>

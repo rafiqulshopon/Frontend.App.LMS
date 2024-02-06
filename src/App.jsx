@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import HomePage from '@/pages/HomePage.jsx';
 import Login from '@/pages/login';
 import Signup from '@/pages/signup';
 import ForgetPassword from '@/pages/forget-password';
@@ -18,87 +17,79 @@ import SingleUser from './pages/users/SingleUser';
 import BookDetails from './pages/books/BookDetails';
 import Profile from './pages/profile';
 import AuthWrapper from './AuthWrapper';
-import RootRedirect from './RootRedirect';
+import ResetPassword from './pages/reset-password';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
 
   const routes = [
-    { path: '/login', component: <Login />, show: true },
-    { path: '/signup', component: <Signup />, show: true },
-    { path: '/forget-password', component: <ForgetPassword />, show: true },
-    { path: '/verify-otp', component: <VerifyOTP />, show: true },
+    { path: '/login', component: <Login />, show: true, protected: false },
+    { path: '/signup', component: <Signup />, show: true, protected: false },
+    {
+      path: '/forget-password',
+      component: <ForgetPassword />,
+      show: true,
+      protected: false,
+    },
+    {
+      path: '/reset-password',
+      component: <ResetPassword />,
+      show: true,
+      protected: false,
+    },
+    {
+      path: '/verify-otp',
+      component: <VerifyOTP />,
+      show: true,
+      protected: false,
+    },
     {
       path: '/dashboard',
-      component: (
-        <AuthWrapper>
-          <Dashboard />
-        </AuthWrapper>
-      ),
+      component: <Dashboard />,
       show: true,
+      protected: true,
     },
     {
       path: '/users',
-      component: (
-        <AuthWrapper>
-          <Users />
-        </AuthWrapper>
-      ),
+      component: <Users />,
       show: true,
+      protected: true,
     },
     {
       path: '/books',
-      component: (
-        <AuthWrapper>
-          <Books />
-        </AuthWrapper>
-      ),
+      component: <Books />,
       show: true,
+      protected: true,
     },
     {
       path: '/borrow-return',
-      component: (
-        <AuthWrapper>
-          <BorrowReturn />
-        </AuthWrapper>
-      ),
+      component: <BorrowReturn />,
       show: true,
+      protected: true,
     },
     {
       path: '/settings',
-      component: (
-        <AuthWrapper>
-          <Settings />
-        </AuthWrapper>
-      ),
+      component: <Settings />,
       show: true,
+      protected: true,
     },
     {
       path: '/user/:id',
-      component: (
-        <AuthWrapper>
-          <SingleUser />
-        </AuthWrapper>
-      ),
+      component: <SingleUser />,
       show: true,
+      protected: true,
     },
     {
       path: '/book/:id',
-      component: (
-        <AuthWrapper>
-          <BookDetails />
-        </AuthWrapper>
-      ),
+      component: <BookDetails />,
       show: true,
+      protected: true,
     },
     {
       path: '/profile',
-      component: (
-        <AuthWrapper>
-          <Profile />
-        </AuthWrapper>
-      ),
+      component: <Profile />,
       show: isLoggedIn,
+      protected: true,
     },
   ];
 
@@ -107,17 +98,22 @@ const App = () => {
       <BrowserRouter>
         <Layout>
           <Routes>
-            {routes.map(
-              (route, index) =>
-                route.show && (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={route.component}
-                  />
-                )
+            {routes.map((route) =>
+              route.show ? (
+                <Route
+                  key={route.id}
+                  path={route.path}
+                  element={
+                    route.protected ? (
+                      <AuthWrapper>{route.component}</AuthWrapper>
+                    ) : (
+                      route.component
+                    )
+                  }
+                />
+              ) : null
             )}
-            <Route path='/' element={<RootRedirect />} />
+            <Route path='/' element={<AuthWrapper />} />
             <Route path='/404' element={<NotFoundPage />} />
             <Route path='*' element={<Navigate to='/404' replace />} />
           </Routes>
