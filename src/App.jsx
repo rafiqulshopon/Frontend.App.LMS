@@ -17,6 +17,7 @@ import SingleUser from './pages/users/SingleUser';
 import BookDetails from './pages/books/BookDetails';
 import Profile from './pages/profile';
 import AuthWrapper from './AuthWrapper';
+import ResetPassword from './pages/reset-password';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get('accessToken'));
@@ -27,6 +28,12 @@ const App = () => {
     {
       path: '/forget-password',
       component: <ForgetPassword />,
+      show: true,
+      protected: false,
+    },
+    {
+      path: '/reset-password',
+      component: <ResetPassword />,
       show: true,
       protected: false,
     },
