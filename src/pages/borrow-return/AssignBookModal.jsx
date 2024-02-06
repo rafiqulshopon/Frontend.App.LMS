@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Form, Select, DatePicker, Button, message } from 'antd';
+import moment from 'moment';
 import axiosInstance from '../../axios';
 
 const { Option } = Select;
@@ -53,6 +54,10 @@ const AssignBookModal = ({
     }
   };
 
+  const disabledDate = (current) => {
+    return current && current < moment().startOf('day');
+  };
+
   return (
     <Modal
       title='Assign Book'
@@ -67,11 +72,13 @@ const AssignBookModal = ({
           rules={[{ required: true, message: 'Please select a book' }]}
         >
           <Select placeholder='Select a book'>
-            {books.map((book) => (
-              <Option key={book._id} value={book._id}>
-                {book.title}
-              </Option>
-            ))}
+            {books
+              .filter((book) => book.currentQuantity > 1)
+              .map((book) => (
+                <Option key={book._id} value={book._id}>
+                  {book.title}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
         <Form.Item
@@ -92,7 +99,12 @@ const AssignBookModal = ({
           label='Expected Return Date'
           rules={[{ required: true, message: 'Please select a date' }]}
         >
-          <DatePicker style={{ width: '100%' }} />
+          <DatePicker
+            style={{ width: '100%' }}
+            disabledDate={disabledDate}
+            superNextIcon={false}
+            superPrevIcon={false}
+          />
         </Form.Item>
 
         <Form.Item>

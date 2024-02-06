@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '../../axios';
 import { Card, Statistic, Row, Col, Spin, Typography, List } from 'antd';
 import {

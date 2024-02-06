@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
@@ -23,7 +22,7 @@ const AuthWrapper = ({ children }) => {
     return <Navigate to='/login' replace />;
   }
 
-  return children;
+  return children || <Navigate to='/dashboard' replace />;
 };
 
 export default AuthWrapper;

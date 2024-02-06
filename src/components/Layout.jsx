@@ -9,6 +9,7 @@ const Layout = ({ children }) => {
     '/login',
     '/signup',
     '/forget-password',
+    '/reset-password',
     '/verify-otp',
   ];
 
