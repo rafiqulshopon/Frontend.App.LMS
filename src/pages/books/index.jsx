@@ -6,7 +6,6 @@ import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import AddBookModal from './AddBookModal';
 import EditBookModal from './EditBookModal';
 import useDebounce from '../../helpers/hooks/useDebounce';
-import AppFilterRadio from '../../helpers/ui/radio/AppFilterRadio';
 import { isAdminUser } from '../../utils/apphelpers';
 
 const Books = () => {
@@ -182,21 +181,6 @@ const Books = () => {
     fetchBooks();
   }, []);
 
-  const departmentOptions = [
-    { label: 'CSE', value: 'CSE' },
-    { label: 'LHR', value: 'LHR' },
-    { label: 'PHR', value: 'PHR' },
-    { label: 'ENG', value: 'ENG' },
-  ];
-
-  const handleDepartmentChange = (value) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      department: value,
-    }));
-    searchBooks();
-  };
-
   return (
     <div className='mt-4 mx-4 bg-white p-6 rounded-lg shadow'>
       <div className='flex justify-between items-center mb-4'>
@@ -207,12 +191,6 @@ const Books = () => {
             prefix={<SearchOutlined />}
             value={filters?.searchKeyword}
             onChange={handleSearchChange}
-          />
-
-          <AppFilterRadio
-            options={departmentOptions}
-            onChange={handleDepartmentChange}
-            btn_text='Department'
           />
         </div>
 
