@@ -12,22 +12,25 @@ import { isAdminUser } from '../../utils/apphelpers';
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [isModalVisible, setIsModalVisible] = useState({
     edit: false,
     add: false,
+  });
+  const [filters, setFilters] = useState({
+    searchKeyword: '',
+    department: '',
   });
   const [editBookId, setEditBookId] = useState(null);
   const navigate = useNavigate();
   const isAdmin = isAdminUser();
 
   // Handlers for modal
-  const showModal = (context, bookId) => {
+  const showModal = (context, bookId = null) => {
     setIsModalVisible((prevState) => ({
       ...prevState,
       [context]: true,
     }));
-    setEditBookId(bookId);
+    if (bookId) setEditBookId(bookId);
   };
 
   const handleOk = () => {
@@ -50,11 +53,13 @@ const Books = () => {
     }
   };
 
-  const searchBooks = async (title = '', department = '') => {
+  const searchBooks = useDebounce(async () => {
+    const { searchKeyword, department } = filters;
     let queryData = {};
-    if (title) queryData.title = title;
+    if (searchKeyword) queryData.title = searchKeyword;
     if (department) queryData.department = department;
 
+    setLoading(true);
     try {
       const response = await axiosInstance.post('/search-books', queryData);
       setBooks(response.data);
@@ -64,16 +69,14 @@ const Books = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const updateQueryData = useDebounce((value) => {
-    setLoading(true);
-    searchBooks(value);
   }, 500);
 
   const handleSearchChange = (event) => {
-    setSearchKeyword(event.target.value);
-    updateQueryData(event.target.value);
+    setFilters((prevState) => ({
+      ...prevState,
+      searchKeyword: event.target.value,
+    }));
+    searchBooks();
   };
 
   const handleDeleteBook = async (bookId) => {
@@ -186,9 +189,12 @@ const Books = () => {
     { label: 'ENG', value: 'ENG' },
   ];
 
-  const handleSelectionChange = (value) => {
-    setLoading(true);
-    searchBooks('', value);
+  const handleDepartmentChange = (value) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      department: value,
+    }));
+    searchBooks();
   };
 
   return (
@@ -199,13 +205,13 @@ const Books = () => {
             placeholder='Search books'
             className='w-1/4'
             prefix={<SearchOutlined />}
-            value={searchKeyword}
+            value={filters?.searchKeyword}
             onChange={handleSearchChange}
           />
 
           <AppFilterRadio
             options={departmentOptions}
-            onChange={handleSelectionChange}
+            onChange={handleDepartmentChange}
             btn_text='Department'
           />
         </div>
