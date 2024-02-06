@@ -72,11 +72,13 @@ const AssignBookModal = ({
           rules={[{ required: true, message: 'Please select a book' }]}
         >
           <Select placeholder='Select a book'>
-            {books.map((book) => (
-              <Option key={book._id} value={book._id}>
-                {book.title}
-              </Option>
-            ))}
+            {books
+              .filter((book) => book.currentQuantity > 1)
+              .map((book) => (
+                <Option key={book._id} value={book._id}>
+                  {book.title}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
         <Form.Item
