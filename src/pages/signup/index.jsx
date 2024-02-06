@@ -182,10 +182,17 @@ const Signup = () => {
                     onChange={(value) =>
                       setSignupData({ ...signupData, role: value })
                     }
-                  >
-                    <Option value='student'>Student</Option>
-                    <Option value='teacher'>Teacher</Option>
-                  </Select>
+                    options={[
+                      {
+                        label: 'Student',
+                        value: 'student',
+                      },
+                      {
+                        label: 'Teacher',
+                        value: 'teacher',
+                      },
+                    ]}
+                  />
                 </div>
 
                 <div className='w-1/2'>
